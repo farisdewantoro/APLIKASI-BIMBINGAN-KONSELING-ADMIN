@@ -1,26 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route,Switch } from 'react-router-dom'; 
+import MainLayout from './components/layouts/MainLayout';
+import Login from './components/auth/Login';
+import Dashboard from './components/pages/Dashboard';
+import Penjurusan from './components/pages/Penjurusan';
+import PenjurusanCreate from './components/pages/PenjurusanCreate';
+import DataPenjurusanSiswa from './components/pages/DataPenjurusanSiswa';
 import './App.css';
-
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router>
+      <Switch>
+       <Route path="/login" component={Login} />  
+        <MainLayout>
+          <Switch>
+              <Route path="/" exact component={Dashboard} />
+              <Route path="/penjurusan" exact  component={Penjurusan} />
+              <Route path="/penjurusan/create" component={PenjurusanCreate} />
+              <Route path="/datapenjurusansiswa" component={DataPenjurusanSiswa} />
+          </Switch>
+        </MainLayout>
+      </Switch>
+      </Router>
     );
   }
 }
