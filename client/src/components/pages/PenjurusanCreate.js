@@ -178,7 +178,7 @@ class PenjurusanCreate extends React.Component {
             return (
                 <div>
                     {this.state.hobbyLists.map((list, i) => {
-                  
+              
                     return (
                         <HobbyList 
                         key={i}

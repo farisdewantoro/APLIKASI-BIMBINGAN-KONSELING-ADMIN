@@ -4,8 +4,8 @@ import { Card, CardContent, Typography, Button, TextField, FormControlLabel,Chec
 import {withStyles} from '@material-ui/core/styles';
 import {AccountCircle, Lock} from '@material-ui/icons';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import {Link} from 'react-router-dom';
-
+import axios from 'axios';
+import classnames from 'classnames';
 
 const styles = theme => ({
 
@@ -41,8 +41,41 @@ const styles = theme => ({
 });
 
 class Login extends React.Component {
+    constructor(){
+        super();
+        this.state={
+            email:'',
+            password:'',
+            errors:{}
+        };
+    }
+    handlerLoginValue = (e)=>{
+        console.log(e);
+        this.setState({[e.target.name]:e.target.value});
+    }
+    handlerSubmitLogin = ()=>{
+        const admin ={
+            email:this.state.email,
+            password:this.state.password
+        };
+    
+    axios.post('/api/admin/login',admin)
+        .then((res)=>{
+            console.log(res);
+        })
+        .catch(err =>{
+            if(err){
+                this.setState({errors:err.response.data});
+            }
+        });
+    
+    
+    }
+
     render() {
+        const {errors} = this.state;
         const {classes} = this.props;
+        console.log(errors.email);
         return (
             <Grid container justify="center" className="login-background">
                 <Grid
@@ -68,10 +101,14 @@ class Login extends React.Component {
                             
                             <CardContent>
                                 <TextField
-                                    id="input-with-icon-textfield"
-                                    fullWidth
-                                    label="Username"
-                                    margin="normal"
+                                    error={errors.email !== undefined  }
+                                id="form-email"
+                                fullWidth
+                                label="Email"
+                                margin="normal"
+                                name="email"
+                                    value={this.state.email}
+                                    onChange={this.handlerLoginValue}
                                     style={{ marginBottom: 20 }}
                                     InputProps={{
                                     startAdornment: (
@@ -82,9 +119,14 @@ class Login extends React.Component {
                                 }}/>
                                 <br/>
                                 <TextField
-                                    id="input-with-icon-textfield"
+                                    error={errors.password !== undefined }
+                                    id="form-password"
                                     margin="normal"
                                     fullWidth
+                                    name="password"
+                                    type="password"
+                                    value={this.state.password}
+                                    onChange={this.handlerLoginValue}
                                     label="Password"
                                     style={{marginBottom:20}}
                                     InputProps={{
@@ -102,7 +144,7 @@ class Login extends React.Component {
                                     }
                                     label="Remember me"
                                 />
-                                    <Button variant="contained" fullWidth  color="primary" style={{marginTop:50}} component={Link} to="/">
+                                <Button variant="contained" fullWidth color="primary" style={{ marginTop: 50 }} onClick={this.handlerSubmitLogin}>
                                         Sign In
                                     </Button>
                            

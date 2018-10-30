@@ -3,9 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
-
-
-
+// ROUTER
+const admins = require('./routes/api/admins');
 
 const app = express();
 
@@ -24,8 +23,11 @@ mongoose
     .catch((err) => {
         console.log(err);
     });
-
-
+// Passport middleware
+app.use(passport.initialize());
+// Passport Config
+require('./config/passport')(passport);
+app.use('/api/admin', admins);
 
 const port = process.env.PORT || 5000;
 

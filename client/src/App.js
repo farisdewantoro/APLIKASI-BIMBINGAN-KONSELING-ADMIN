@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Provider} from 'react-redux';
 import { BrowserRouter as Router, Route,Switch } from 'react-router-dom'; 
 import MainLayout from './components/layouts/MainLayout';
 import Login from './components/auth/Login';
