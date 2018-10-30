@@ -6,9 +6,14 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import {Typography,Paper, Button,TextField,Grid,Card,CardContent,CardHeader} from '@material-ui/core';
-import HobbyList from '../form/HobbyList';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BuildIcon from '@material-ui/icons/Build';
+import HobbyList from '../form/HobbyList';
+import KepribadianList from '../form/KepribadianList';
+import CaraBelajarList from '../form/CaraBelajarList';
+import SoftSkillList from '../form/SoftSkillList';
+import NilaiMatapelajaranList from '../form/NilaiMatapelajaranList';
+
 const styles = theme => ({
     root: {
         width: '90%',
@@ -26,7 +31,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return [' Masukan Nama Jurusan', 'Masukan Hobby&Bobot ', 'Masukan Kepribadian&Bobot'];
+    return [' Masukan Nama Jurusan', 'Masukan Hobby&Bobot ', 'Masukan Kepribadian&Bobot','Masukan Cara Belajar&Bobot','Masukan Softskill&Bobot','Masukan Matapelajaran&Nilai'];
 }
 
 
@@ -51,6 +56,9 @@ class PenjurusanCreate extends React.Component {
             ],
             softSkillLists:[
                 {softskill:'',bobot:''}
+            ],
+            nilaiMatapelajaranLists:[
+                {matapelajaran:'',nilai:''}
             ]
         };
     }
@@ -77,17 +85,46 @@ class PenjurusanCreate extends React.Component {
         this.setState({ hobbyLists: newHobby });
     }
 
-    handleReset = () => {
-        this.setState({
-            activeStep: 0,
+    handleKepribadianValueChange = (i) => (value) =>{
+        const newKepribadian = this.state.kepribadianLists.map((kepribadianList,index)=>{
+            if (i !== index) return kepribadianList;
+            return {...kepribadianList,[value.target.name]:value.target.value};
         });
-    };
+        this.setState({ kepribadianLists: newKepribadian });
+    }
+    handleCarabelajarValueChange = (i) => (value) =>{
+        const newCarabelajar = this.state.caraBelajarLists.map((carabelajarList,index)=>{
+            if (i !== index) return carabelajarList;
+            return { ...carabelajarList,[value.target.name]:value.target.value};
+        });
+        this.setState({ caraBelajarLists: newCarabelajar });
+    }
+    handleSoftskillValueChange = (i) => (value) => {
+        const newSoftskill = this.state.softSkillLists.map((softSkillList, index) => {
+            if (i !== index) return softSkillList;
+            return { ...softSkillList, [value.target.name]: value.target.value };
+        });
+        this.setState({ softSkillLists: newSoftskill });
+    }
+
+    handleNilaiMatapelajaranValueChange = (i) => (value) => {
+        const newNilaiMatapelajaran = this.state.nilaiMatapelajaranLists.map((nilaiMatapelajaranList, index) => {
+            if (i !== index) return nilaiMatapelajaranList;
+            return { ...nilaiMatapelajaranList, [value.target.name]: value.target.value };
+        });
+        this.setState({ nilaiMatapelajaranLists: newNilaiMatapelajaran });
+    }
+
+
+  
     deleteHandlerHobby = (i) =>{
         this.setState({ hobbyLists: this.state.hobbyLists.filter((hobbylist, index) => i !== index) });
     }
     addHobbyHandler = () =>{
         this.setState({ hobbyLists: this.state.hobbyLists.concat([{ hobby: '', bobot:'' }]) });
     }
+
+
     deleteHandlerKepribadian = (i) => {
         this.setState({ kepribadianLists: this.state.kepribadianLists.filter((kepribadianList, index) => i !== index) });
     }
@@ -95,6 +132,33 @@ class PenjurusanCreate extends React.Component {
         this.setState({ kepribadianLists: this.state.kepribadianLists.concat([{ kepribadian: '', bobot: '' }]) });
     }
 
+    deleteHandlerCarabelajar = (i) => {
+        this.setState({ caraBelajarLists: this.state.caraBelajarLists.filter((carabelajarList, index) => i !== index) });
+    }
+    addCarabelajarHandler = () => {
+        this.setState({ caraBelajarLists: this.state.caraBelajarLists.concat([{ carabelajar: '', bobot: '' }]) });
+    }
+
+    deleteHandlerSoftskill = (i) => {
+        this.setState({ softSkillLists: this.state.softSkillLists.filter((SoftskillList, index) => i !== index) });
+    }
+    addSoftskillHandler = () => {
+        this.setState({ softSkillLists: this.state.softSkillLists.concat([{ softskill: '', bobot: '' }]) });
+    }
+
+    deleteHandlerNilaiMatapelajaran = (i) => {
+        this.setState({ nilaiMatapelajaranLists: this.state.nilaiMatapelajaranLists.filter((nilaiMatapelajaranList, index) => i !== index) });
+    }
+    addNilaiMatapelajaranHandler = () => {
+        this.setState({ nilaiMatapelajaranLists: this.state.nilaiMatapelajaranLists.concat([{ matapelajaran: '', nilai: '' }]) });
+    }
+
+
+    handleReset = () => {
+        this.setState({
+            activeStep: 0,
+        });
+    };
      getStepContent = (step) => {
 
     switch (step) {
@@ -113,46 +177,23 @@ class PenjurusanCreate extends React.Component {
 
             return (
                 <div>
-
-                    
                     {this.state.hobbyLists.map((list, i) => {
                   
                     return (
-                        <Grid container spacing={16} key={i}>
-                            <Grid item>
-                                <TextField
-                                    id="standard-name"
-                                    label="Hobby"
-                                    fullWidth
-                                    margin="normal"
-                                    name="hobby"
-                                    value={list.hobby}
-                                    onChange={this.handleHobbyValueChange(i)}
-                                />
-                            </Grid>
-                            <Grid item>
-                                <TextField
-                                    id="standard-name"
-                                    label="Bobot"
-                                    fullWidth
-                                    margin="normal"
-                                    name="bobot"
-                                    value={list.bobot}
-                                    onChange={this.handleHobbyValueChange(i)}
-                                />
-                            </Grid>
-                            <Grid item>
-                                <Button component="span" style={{ marginTop: 20 }} onClick={()=>this.deleteHandlerHobby(i)} >
-                                    <DeleteIcon />
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    );
-                })}
-                    <Button fullWidth style={{marginTop:20}} variant = "contained" color = "primary" onClick={this.addHobbyHandler}>Tambah Opsi baru</Button>
+                        <HobbyList 
+                        key={i}
+                        id={i} 
+                        valHobby={list.hobby} 
+                        controlValHobby={this.handleHobbyValueChange(i) }
+                        valBobot={list.bobot}
+                        controlValBobot={this.handleHobbyValueChange(i)}
+                        deleteHobbylist={() =>this.deleteHandlerHobby(i)} 
+                        />
+                        );
+                    })}
+                    <Button fullWidth style={{ marginTop: 20 }} variant="contained" color="primary" onClick={this.addHobbyHandler}>Tambah Opsi baru</Button>
                 </div>
             );
-
 
 
         case 2:
@@ -161,36 +202,77 @@ class PenjurusanCreate extends React.Component {
                     {this.state.kepribadianLists.map((list, i) => {
 
                         return (
-                            <Grid container spacing={16} key={i}>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-name"
-                                        label="Kepribadian"
-                                        fullWidth
-                                        margin="normal"
-                                        name="kepribadian"
-                                        value={list.kepribadian}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        id="standard-name"
-                                        label="Bobot"
-                                        fullWidth
-                                        margin="normal"
-                                        name="bobot"
-                                        value={list.bobot}
-                                    />
-                                </Grid>
-                                <Grid item>
-                                    <Button component="span" style={{ marginTop: 20 }} onClick={() => this.deleteHandlerKepribadian(i)} >
-                                        <DeleteIcon />
-                                    </Button>
-                                </Grid>
-                            </Grid>
+                            <KepribadianList 
+                            key={i}
+                            id={i}
+                            valKepribadian={list.kepribadian}
+                            controlValKepribadian={this.handleKepribadianValueChange(i)}
+                            valBobot={list.bobot}
+                            controlValBobot={this.handleKepribadianValueChange(i)}
+                            deleteKepribadianList={()=>this.deleteHandlerKepribadian(i)}
+                            />
                         );
                     })}
                     <Button fullWidth style={{ marginTop: 20 }} variant="contained" color="primary" onClick={this.addKepribadianHandler}>Tambah Opsi baru</Button>
+                </div>
+            );
+        case 3:
+            return (
+                <div>
+                    {this.state.caraBelajarLists.map((list, i) => {
+                        
+                        return (
+                            <CaraBelajarList
+                                key={i}
+                                id={i}
+                                valCarabelajar={list.carabelajar}
+                                controlValCarabelajar={this.handleCarabelajarValueChange(i)}
+                                valBobot={list.bobot}
+                                controlValBobot={this.handleCarabelajarValueChange(i)}
+                                deleteCarabelajarList={() => this.deleteHandlerCarabelajar(i)}
+                            />
+                        );
+                    })}
+                    <Button fullWidth style={{ marginTop: 20 }} variant="contained" color="primary" onClick={this.addCarabelajarHandler}>Tambah Opsi baru</Button>
+                </div>
+            );
+        case 4:
+            return (
+                <div>
+                    {this.state.softSkillLists.map((list, i) => {
+
+                        return (
+                            <SoftSkillList
+                                key={i}
+                                id={i}
+                                valSoftskill={list.softskill}
+                                controlValSoftskill={this.handleSoftskillValueChange(i)}
+                                valBobot={list.bobot}
+                                controlValBobot={this.handleSoftskillValueChange(i)}
+                                deleteSoftskillList={() => this.deleteHandlerSoftskill(i)}
+                            />
+                        );
+                    })}
+                    <Button fullWidth style={{ marginTop: 20 }} variant="contained" color="primary" onClick={this.addSoftskillHandler}>Tambah Opsi baru</Button>
+                </div>
+        );
+        case 5:
+            return (
+                <div>
+                    {this.state.nilaiMatapelajaranLists.map((list, i) => {
+                        return (
+                            <NilaiMatapelajaranList
+                                key={i}
+                                id={i}
+                                valMatapelajaran={list.matapelajaran}
+                                controlValMatapelajaran={this.handleNilaiMatapelajaranValueChange(i)}
+                                valNilai={list.nilai}
+                                controlValNilai={this.handleNilaiMatapelajaranValueChange(i)}
+                                deleteNilaiMatapelajaranList={() => this.deleteHandlerNilaiMatapelajaran(i)}
+                            />
+                        );
+                    })}
+                    <Button fullWidth style={{ marginTop: 20 }} variant="contained" color="primary" onClick={this.addNilaiMatapelajaranHandler}>Tambah Opsi baru</Button>
                 </div>
             );
         default:

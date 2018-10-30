@@ -9,16 +9,18 @@ import DeleteIcon from '@material-ui/icons/Delete';
       return id;
     }
   render() {
-     
     return (
-        <div>
-            <Grid container spacing={16}>
+        
+            <Grid container spacing={16} key={this.props.id}>
                 <Grid item>
                     <TextField
                         id="standard-name"
                         label="Hobby"
                         fullWidth
                         margin="normal"
+                        name="hobby"
+                        value={this.props.valHobby}
+                        onChange={this.props.controlValHobby}
                     />
                 </Grid>
                 <Grid item>
@@ -27,16 +29,18 @@ import DeleteIcon from '@material-ui/icons/Delete';
                         label="Bobot"
                         fullWidth
                         margin="normal"
+                        name="bobot"
+                        value={this.props.valBobot}
+                        onChange={this.props.controlValBobot}
                     />
                 </Grid>
                 <Grid item>
-                    <Button component="span" style={{ marginTop: 20 }} >
-                        <DeleteIcon/>
+                    <Button component="span" style={{ marginTop: 20 }} onClick={this.props.deleteHobbylist} >
+                        <DeleteIcon />
                     </Button>
                 </Grid>
             </Grid>
-        </div>
-    )
+    );
   }
 }
 export default HobbyList;
