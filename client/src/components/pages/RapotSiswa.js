@@ -17,7 +17,7 @@ class RapotSiswa extends Component {
         return (
             <div >
                 <Grid container>
-                    <Button variant="contained" color="secondary" component={Link} to="/RapotSiswa/create" >
+                    <Button variant="contained" color="secondary" component={Link} to="/datasiswa/create" >
                         <NoteAddIcon className={classes.NoteIcon} />
                         Tambah data Siswa
                     </Button>

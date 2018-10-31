@@ -13,6 +13,8 @@ import Penjurusan from './components/pages/Penjurusan';
 import PenjurusanCreate from './components/pages/PenjurusanCreate';
 import DataPenjurusanSiswa from './components/pages/DataPenjurusanSiswa';
 import RapotSiswa from './components/pages/RapotSiswa';
+import ProfileAdmin from './components/pages/ProfileAdmin';
+import DataSiswaCreate from './components/pages/DataSiswaCreate';
 import './App.css';
 
 // Check for token 
@@ -49,6 +51,8 @@ class App extends Component {
               <Route path="/penjurusan/create" component={PenjurusanCreate} />
               <Route path="/datapenjurusansiswa" component={DataPenjurusanSiswa} />
               <Route path="/rapotsiswa" component={RapotSiswa}/> 
+              <Route path="/profileadmin" component={ProfileAdmin}/> 
+              <Route path="/datasiswa/create" component={DataSiswaCreate}/>
           </Switch>
         </MainLayout>
       </Switch>

@@ -1,5 +1,5 @@
 import React from 'react';
-import compose from 'recompose/compose';
+import { compose } from "redux";
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, IconButton,Button, Toolbar, Typography, Drawer, List,Paper } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox';
@@ -100,12 +100,13 @@ class MainLayout extends React.Component {
     onLogoutClick = () => {
         this.props.logoutAdmin();
     }
- 
     
+
     render() {
 
         const { classes } = this.props;
         const { open } = this.state;
+        const { isAuthenticated, admin } = this.props.auth;
        
         return (
             <div className={classes.root}>
@@ -125,13 +126,13 @@ class MainLayout extends React.Component {
                         <div className={classes.grow} />
                         <Button
                             color="inherit"
-                            component={Link} to='/login'
+                            component={Link} to='/profileadmin'
                       
                             style={{textTransform:"none"}}
                         >
                             <FaceIcon />
                             <Typography variant="subtitle1"  color="inherit"  style={{marginLeft:10}}>
-                                Username
+                                {admin.email}
                         </Typography>
                         </Button>
                         <Button
@@ -187,17 +188,17 @@ MainLayout.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-    auth: state.auth
+    auth: state.auth,
+    classes: state.classes
 });
 
 // Menggunakan library recompose
-export default withStyles(styles)(MainLayout);
+// export default withStyles(styles)(MainLayout);
 
 // Menggunakan library recompose
-// export default compose(
-//     withStyles(styles,{name:'MainLayout'}),
-//     connect(mapStateToProps,{logoutAdmin})
-//     (MainLayout));
+export default compose(
+    connect(mapStateToProps, { logoutAdmin}),
+)(withStyles(styles)(MainLayout));
 
 
 // // Menggunakan library recompose
