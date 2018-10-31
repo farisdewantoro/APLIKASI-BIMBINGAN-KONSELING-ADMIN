@@ -1,11 +1,16 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
+import compose from 'recompose/compose';
 import { Card, CardContent, Typography, Button, TextField, FormControlLabel,Checkbox } from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import {AccountCircle, Lock} from '@material-ui/icons';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import axios from 'axios';
-import classnames from 'classnames';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {loginAdmin} from '../../actions/authActions';
+
+
+
 
 const styles = theme => ({
 
@@ -40,6 +45,7 @@ const styles = theme => ({
     }
 });
 
+
 class Login extends React.Component {
     constructor(){
         super();
@@ -50,32 +56,47 @@ class Login extends React.Component {
         };
     }
     handlerLoginValue = (e)=>{
-        console.log(e);
+      
         this.setState({[e.target.name]:e.target.value});
     }
     handlerSubmitLogin = ()=>{
-        const admin ={
+        const adminData ={
             email:this.state.email,
             password:this.state.password
         };
     
-    axios.post('/api/admin/login',admin)
-        .then((res)=>{
-            console.log(res);
-        })
-        .catch(err =>{
-            if(err){
-                this.setState({errors:err.response.data});
-            }
-        });
+    this.props.loginAdmin(adminData);
+        // axios.post('/api/admin/login',admin)
+    //     .then((res)=>{
+    //         console.log(res);
+    //     })
+    //     .catch(err =>{
+    //         if(err){
+    //             this.setState({errors:err.response.data});
+    //         }
+    //     });
     
     
+    }
+
+    componentDidMount(){
+        if(this.props.auth.isAuthenticated){
+            this.props.history.push('/');
+        }
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.auth.isAuthenticated){
+            this.props.history.push('/');
+        }
+        if(nextProps.errors){
+            this.setState({errors:nextProps.errors});
+        }
     }
 
     render() {
         const {errors} = this.state;
         const {classes} = this.props;
-        console.log(errors.email);
+    
         return (
             <Grid container justify="center" className="login-background">
                 <Grid
@@ -157,4 +178,23 @@ class Login extends React.Component {
         )
     }
 }
-export default withStyles(styles)(Login);
+
+Login.propTypes={
+    loginAdmin:PropTypes.func.isRequired,
+    auth:PropTypes.object.isRequired,
+    errors:PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state)=>({
+    auth:state.auth,
+    errors:state.errors
+});
+
+
+// export default connect(null, { loginUser })(withStyles(styles)(Login)); // cara 1 tanpa library recompose
+
+// Menggunakan library recompose
+export default compose(
+    withStyles(styles,{name:'Login'}),
+    connect(mapStateToProps,{loginAdmin})
+)(Login); 

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, IconButton,Button, Toolbar, Typography, Drawer, List,Paper } from '@material-ui/core';
 import InboxIcon from '@material-ui/icons/Inbox';
@@ -9,6 +9,11 @@ import FaceIcon from '@material-ui/icons/Face';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { Link } from 'react-router-dom';
 import { mainListItems } from './ListItem.js';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { logoutAdmin } from '../../actions/authActions';
+
+
 const drawerWidth = 260;
 const styles = theme => ({
     root: {
@@ -79,23 +84,29 @@ const styles = theme => ({
 });
 
 class MainLayout extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            open: true,
+            Menu: [
+                { title: "Dashboard", icon: "DashboardIcon", link: "/" },
+                { title: "Inbox", icon: "MenuIcon", link: "/inbox" },
+            ],
+        };
+    }
     handleDrawerOpen = () => {
         this.setState({ open: !this.state.open });
     };
-
+    onLogoutClick = () => {
+        this.props.logoutAdmin();
+    }
  
-    state = {
-        open: true,
-        Menu:[
-            {title:"Dashboard",icon:"DashboardIcon",link:"/"},
-            { title: "Inbox", icon: "MenuIcon", link: "/inbox" },
-        ],
-    };
+    
     render() {
 
         const { classes } = this.props;
         const { open } = this.state;
-      
+       
         return (
             <div className={classes.root}>
                 <AppBar position="fixed" className={classes.appBar}  >
@@ -132,7 +143,7 @@ class MainLayout extends React.Component {
                         >
                      
                         <PowerSettingsNewIcon />
-                            <Typography variant="subtitle1" color="inherit"  style={{marginLeft:10}}>
+                            <Typography variant="subtitle1" color="inherit" onClick={this.onLogoutClick} style={{marginLeft:10}}>
                                 Logout
                         </Typography>
                         </Button>
@@ -170,6 +181,27 @@ class MainLayout extends React.Component {
 
 MainLayout.propTypes = {
     classes: PropTypes.object.isRequired,
+    logoutAdmin:PropTypes.func.isRequired,
+    auth:PropTypes.object.isRequired
+
 };
 
+const mapStateToProps = (state) => ({
+    auth: state.auth
+});
+
+// Menggunakan library recompose
 export default withStyles(styles)(MainLayout);
+
+// Menggunakan library recompose
+// export default compose(
+//     withStyles(styles,{name:'MainLayout'}),
+//     connect(mapStateToProps,{logoutAdmin})
+//     (MainLayout));
+
+
+// // Menggunakan library recompose
+// export default compose(
+//     withStyles(styles, { name: 'Login' }),
+//     connect(mapStateToProps, { loginAdmin })
+// )(Login); 
