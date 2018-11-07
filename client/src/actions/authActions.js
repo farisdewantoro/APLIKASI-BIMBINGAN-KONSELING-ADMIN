@@ -1,11 +1,12 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
-import { GET_ERRORS, SET_CURRENT_ADMIN} from './types';
+import { GET_ERRORS, SET_CURRENT_ADMIN, LOGIN_ADMIN_LOADING, LOGIN_ADMIN_LOADING_STOP} from './types';
 
 // Login - Get Admin Token
 
 export const loginAdmin = adminData => dispatch =>{
+    dispatch(setLoginLoading());
     axios.post('/api/admin/login',adminData)
     .then(res=>{
         // Save to localstorage
@@ -19,13 +20,30 @@ export const loginAdmin = adminData => dispatch =>{
         // Set current user
         dispatch(setCurrentAdmin(decoded));
     })
-    .catch(err=>
-
-            dispatch({
+    .catch(err=>{
+        dispatch(setLoginLoadingStop());
+         dispatch({
                 type:GET_ERRORS,
                 payload:err.response.data
-            }));
+            });
+    });
 };
+
+// LOGIN ADMIN LOADING
+export const setLoginLoading = () =>{
+    return{
+        type: LOGIN_ADMIN_LOADING
+    }
+}
+
+// LOGIN ADMIN LOADING STOP
+export const setLoginLoadingStop = () => {
+    return {
+        type: LOGIN_ADMIN_LOADING_STOP
+    }
+}
+
+
 
 // Set logged in admin
 export const setCurrentAdmin = (decoded) => {
@@ -34,6 +52,7 @@ export const setCurrentAdmin = (decoded) => {
         payload:decoded
     }
 }
+
 
 // Logout admin
 export const logoutAdmin = () => dispatch =>{

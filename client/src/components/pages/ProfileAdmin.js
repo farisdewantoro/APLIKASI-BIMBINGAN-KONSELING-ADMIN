@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Grid, Typography, Card, CardContent, TextField, Divider  } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { compose } from "redux";
 import { connect } from 'react-redux';
 class ProfileAdmin extends Component {
   render() {

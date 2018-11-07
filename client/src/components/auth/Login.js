@@ -1,7 +1,7 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import compose from 'recompose/compose';
-import { Card, CardContent, Typography, Button, TextField, FormControlLabel,Checkbox } from '@material-ui/core';
+import { Card, CardContent, Typography, Button, TextField, FormControlLabel, Checkbox, LinearProgress  } from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import {AccountCircle, Lock} from '@material-ui/icons';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -96,7 +96,18 @@ class Login extends React.Component {
     render() {
         const {errors} = this.state;
         const {classes} = this.props;
+        const {loading} = this.props.auth;
+        const {password,email} = this.props.errors;
+     
+        let loadingBar;
+         if(loading ){
+            loadingBar = <LinearProgress variant="query"  />                   
+        }
     
+        
+
+  
+       
         return (
             <Grid container justify="center" className="login-background">
                 <Grid
@@ -105,6 +116,7 @@ class Login extends React.Component {
                     alignItems="center"
                     justify="center">
                     <Grid item xs={7}>
+                       
                         <Typography variant="h2" className={classes.title1}>
                             Bimbingan Konseling 
                        
@@ -116,11 +128,11 @@ class Login extends React.Component {
                     <Grid item xs={5}>
                         <Card >
                            
-                                <Typography variant="h5" className={classes.formloginTitle}>
+                           {loadingBar}
+                            <CardContent>
+                                <Typography variant="h6" className={classes.formloginTitle}>
                                     Admin Login
                                 </Typography>
-                            
-                            <CardContent>
                                 <TextField
                                     error={errors.email !== undefined  }
                                 id="form-email"
@@ -128,6 +140,7 @@ class Login extends React.Component {
                                 label="Email"
                                 margin="normal"
                                 name="email"
+                                helperText={errors.email}
                                     value={this.state.email}
                                     onChange={this.handlerLoginValue}
                                     style={{ marginBottom: 20 }}
@@ -149,6 +162,7 @@ class Login extends React.Component {
                                     value={this.state.password}
                                     onChange={this.handlerLoginValue}
                                     label="Password"
+                                    helperText={errors.password}
                                     style={{marginBottom:20}}
                                     InputProps={{
                                     startAdornment: (
@@ -182,7 +196,8 @@ class Login extends React.Component {
 Login.propTypes={
     loginAdmin:PropTypes.func.isRequired,
     auth:PropTypes.object.isRequired,
-    errors:PropTypes.object.isRequired
+    errors:PropTypes.object.isRequired,
+  
 }
 
 const mapStateToProps = (state)=>({

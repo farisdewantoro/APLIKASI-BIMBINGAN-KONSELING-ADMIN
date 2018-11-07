@@ -5,7 +5,7 @@ import store from './store';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import { setCurrentAdmin, logoutAdmin } from './actions/authActions';
-
+import PrivateRoute from './components/common/PrivateRoute';
 import MainLayout from './components/layouts/MainLayout';
 import Login from './components/auth/Login';
 import Dashboard from './components/pages/Dashboard';
@@ -46,13 +46,13 @@ class App extends Component {
        <Route path="/login" component={Login} />  
         <MainLayout>
           <Switch>
-              <Route path="/" exact component={Dashboard} />
-              <Route path="/penjurusan" exact  component={Penjurusan} />
-              <Route path="/penjurusan/create" component={PenjurusanCreate} />
-              <Route path="/datapenjurusansiswa" component={DataPenjurusanSiswa} />
-              <Route path="/rapotsiswa" component={RapotSiswa}/> 
-              <Route path="/profileadmin" component={ProfileAdmin}/> 
-              <Route path="/datasiswa/create" component={DataSiswaCreate}/>
+              <PrivateRoute path="/" exact component={Dashboard} />
+              <PrivateRoute path="/penjurusan" exact  component={Penjurusan} />
+              <PrivateRoute path="/penjurusan/create" component={PenjurusanCreate} />
+              <PrivateRoute path="/datapenjurusansiswa" component={DataPenjurusanSiswa} />
+              <PrivateRoute path="/rapotsiswa" component={RapotSiswa}/> 
+              <PrivateRoute path="/profileadmin" component={ProfileAdmin}/> 
+              <PrivateRoute path="/datasiswa/create" component={DataSiswaCreate}/>
           </Switch>
         </MainLayout>
       </Switch>
