@@ -1,9 +1,20 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
-import compose from 'recompose/compose';
-import { Card, CardContent, Typography, Button, TextField, FormControlLabel, Checkbox, LinearProgress  } from '@material-ui/core';
+import { compose } from "redux";
+
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import CardContent from '@material-ui/core/CardContent';
+import Card from '@material-ui/core/Card';
+
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Lock from '@material-ui/icons/Lock';
+
 import {withStyles} from '@material-ui/core/styles';
-import {AccountCircle, Lock} from '@material-ui/icons';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
@@ -97,7 +108,7 @@ class Login extends React.Component {
         const {errors} = this.state;
         const {classes} = this.props;
         const {loading} = this.props.auth;
-        const {password,email} = this.props.errors;
+      
      
         let loadingBar;
          if(loading ){

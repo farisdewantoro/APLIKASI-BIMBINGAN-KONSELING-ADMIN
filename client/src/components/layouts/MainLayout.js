@@ -1,8 +1,6 @@
 import React from 'react';
 import { compose } from "redux";
 import { withStyles } from '@material-ui/core/styles';
-import { AppBar, IconButton,Button, Toolbar, Typography, Drawer, List,Paper } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/Inbox';
 import classNames from 'classnames';
 import MenuIcon from '@material-ui/icons/Menu';
 import FaceIcon from '@material-ui/icons/Face';
@@ -13,6 +11,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logoutAdmin } from '../../actions/authActions';
 
+import List from '@material-ui/core/List';
+import Drawer from '@material-ui/core/Drawer';
+import Typography from '@material-ui/core/Typography';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import AppBar from '@material-ui/core/AppBar';
 
 const drawerWidth = 260;
 const styles = theme => ({
@@ -106,14 +111,14 @@ class MainLayout extends React.Component {
 
         const { classes } = this.props;
         const { open } = this.state;
-        const { isAuthenticated, admin } = this.props.auth;
+        const {  admin } = this.props.auth;
        
         return (
             <div className={classes.root}>
                 <AppBar position="fixed" className={classes.appBar}  >
                     <Toolbar disableGutters={!this.state.open} className={classes.toolbar} >
                    
-                        <IconButton className={classes.menuButton} onClick={this.handleDrawerOpen} className={classNames(
+                        <IconButton  onClick={this.handleDrawerOpen} className={classNames(
                             classes.menuButton,
                             this.state.open && classes.menuButtonHidden,
                         )} color="inherit" aria-label="Open drawer">

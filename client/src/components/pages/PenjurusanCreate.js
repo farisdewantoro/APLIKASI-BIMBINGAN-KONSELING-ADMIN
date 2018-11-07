@@ -1,18 +1,27 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
-import {Typography,Paper, Button,TextField,Grid,Card,CardContent,CardHeader} from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+
 import BuildIcon from '@material-ui/icons/Build';
 import HobbyList from '../form/HobbyList';
 import KepribadianList from '../form/KepribadianList';
 import CaraBelajarList from '../form/CaraBelajarList';
 import SoftSkillList from '../form/SoftSkillList';
 import NilaiMatapelajaranList from '../form/NilaiMatapelajaranList';
+
+import Card from '@material-ui/core/Card';
+import CardContent  from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
     root: {
@@ -284,7 +293,7 @@ class PenjurusanCreate extends React.Component {
         const { classes } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
-        const data = this.state;
+      
         return (
             <div className={classes.root}>
             <Card>
@@ -345,4 +354,4 @@ PenjurusanCreate.propTypes = {
     classes: PropTypes.object,
 };
 
-export default withStyles(styles)(PenjurusanCreate);
+export default compose(withStyles(styles,{name:"PenjurusanCreate"}),connect(null))(PenjurusanCreate);

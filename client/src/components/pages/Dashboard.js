@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
 import SimpleLineChart from '../chart/SimpleLineChart';
-
-export default class Dashboard extends Component {
+import {connect} from 'react-redux';
+ class Dashboard extends Component {
     render() {
         return (
             <div >
@@ -11,3 +11,5 @@ export default class Dashboard extends Component {
         )
     }
 }
+
+export default connect(null)(Dashboard);

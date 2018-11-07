@@ -8,7 +8,7 @@ import {Link} from 'react-router-dom';
 import Divider from '@material-ui/core/Divider';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+
 
 export const mainListItems = (
     <div>

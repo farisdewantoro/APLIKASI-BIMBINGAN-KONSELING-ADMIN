@@ -1,6 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
 import EnhancedTableHead from '../table/TablePenjurusan';
-import { NavigationIcon, Button,Grid } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -33,4 +36,4 @@ Penjurusan.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Penjurusan);
+export default compose(withStyles(styles,{name:"Penjurusan"}),connect(null))(Penjurusan);

@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { TextField, Grid, Button } from '@material-ui/core';
+
+
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+
+
 import DeleteIcon from '@material-ui/icons/Delete';
 
 class CaraBelajarList extends Component {

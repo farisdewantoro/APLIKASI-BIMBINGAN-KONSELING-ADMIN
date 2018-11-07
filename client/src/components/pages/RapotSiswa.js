@@ -1,6 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
 import EnhancedTableHead from '../table/TableRapotSiswa';
-import { NavigationIcon, Button, Grid } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -33,4 +36,4 @@ RapotSiswa.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(RapotSiswa);
+export default compose(withStyles(styles,{name:"RapotSiswa"}),connect(null))(RapotSiswa);
