@@ -50,10 +50,10 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
-    { id: 'no', numeric: false, disablePadding: true, label: 'No Induk' },
+    { id: 'nis', numeric: false, disablePadding: true, label: 'No Induk Siswa' },
     { id: 'nama', numeric: true, disablePadding: false, label: 'Nama Siswa' },
-    { id: 'kelas', numeric: true, disablePadding: false, label: 'Kelas' },
-    { id: 'angkatan', numeric: true, disablePadding: false, label: 'Angkatan' },
+    { id: 'tanggalLahir', numeric: true, disablePadding: false, label: 'Tanggal Lahir' },
+    { id: 'jenisKelamin', numeric: true, disablePadding: false, label: 'Jenis Kelamin' },
 
 ];
 
@@ -272,9 +272,10 @@ class EnhancedTable extends React.Component {
 
     render() {
         const { classes } = this.props;
-        const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+        const {  order, orderBy, selected, rowsPerPage, page } = this.state;
+        let {data} = this.props;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
+      
         return (
             <Paper className={classes.root}>
                 <EnhancedTableToolbar numSelected={selected.length} />
@@ -292,27 +293,28 @@ class EnhancedTable extends React.Component {
                             {stableSort(data, getSorting(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map(n => {
-                                    const isSelected = this.isSelected(n.id);
+                                    const isSelected = this.isSelected(n._id);
+                                    
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(event, n.id)}
+                                            onClick={event => this.handleClick(event, n._id)}
                                             role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}
-                                            key={n.id}
+                                            key={n._id}
                                             selected={isSelected}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox checked={isSelected} />
                                             </TableCell>
                                             <TableCell component="th" scope="row" padding="none">
-                                                {n.name}
+                                                {n.nis}
                                             </TableCell>
-                                            <TableCell numeric>{n.calories}</TableCell>
-                                            <TableCell numeric>{n.fat}</TableCell>
-                                            <TableCell numeric>{n.carbs}</TableCell>
-                                            <TableCell numeric>{n.protein}</TableCell>
+                                    
+                                            <TableCell numeric>{n.nama}</TableCell>
+                                            <TableCell numeric>{n.tanggalLahir}</TableCell>
+                                            <TableCell numeric>{n.jenisKelamin}</TableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -345,6 +347,7 @@ class EnhancedTable extends React.Component {
 
 EnhancedTable.propTypes = {
     classes: PropTypes.object.isRequired,
+   
 };
 
 export default withStyles(styles)(EnhancedTable);

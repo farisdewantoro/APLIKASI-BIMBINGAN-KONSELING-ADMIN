@@ -8,6 +8,7 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import { getAllMurid} from '../../actions/muridActions';
 const styles = theme => ({
     NoteIcon: {
         marginRight: theme.spacing.unit
@@ -15,8 +16,21 @@ const styles = theme => ({
 });
 
 class RapotSiswa extends Component {
+ 
+    componentDidMount(){
+        this.props.getAllMurid();
+    }
+
+
     render() {
         const { classes } = this.props;
+        const {murids} = this.props.murids;
+        let TableData;
+        if(murids !== null){
+            TableData=(
+                <EnhancedTableHead data={murids} />
+            )
+        }
         return (
             <div >
                 <Grid container>
@@ -25,7 +39,7 @@ class RapotSiswa extends Component {
                         Tambah data Siswa
                     </Button>
 
-                    <EnhancedTableHead />
+                  {TableData}
 
                 </Grid>
             </div>
@@ -34,6 +48,11 @@ class RapotSiswa extends Component {
 }
 RapotSiswa.propTypes = {
     classes: PropTypes.object.isRequired,
+    murids:PropTypes.object.isRequired
 };
 
-export default compose(withStyles(styles,{name:"RapotSiswa"}),connect(null))(RapotSiswa);
+const mapStateToProps = (state) =>({
+    murids:state.murids
+});
+
+export default compose(withStyles(styles, { name: "RapotSiswa" }), connect(mapStateToProps,{getAllMurid}))(RapotSiswa);

@@ -5,6 +5,7 @@ const passport = require('passport');
 
 // ROUTER
 const admins = require('./routes/api/admins');
+const murids = require('./routes/api/murids');
 
 const app = express();
 
@@ -28,7 +29,7 @@ app.use(passport.initialize());
 // Passport Config
 require('./config/passport')(passport);
 app.use('/api/admin', admins);
-
+app.use('/api/murids',murids);
 const port = process.env.PORT || 5050;
 
 app.listen(port, () => {
