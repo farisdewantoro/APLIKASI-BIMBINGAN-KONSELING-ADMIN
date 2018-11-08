@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import { getAllMurid} from '../../actions/muridActions';
+import Spinner from '../common/Spinner';
 const styles = theme => ({
     NoteIcon: {
         marginRight: theme.spacing.unit
@@ -24,22 +25,33 @@ class RapotSiswa extends Component {
 
     render() {
         const { classes } = this.props;
-        const {murids} = this.props.murids;
+        const {murids,loading} = this.props.murids;
         let TableData;
+        
         if(murids !== null){
             TableData=(
                 <EnhancedTableHead data={murids} />
+            )
+        }else{
+            TableData=(
+                <Spinner/>
             )
         }
         return (
             <div >
                 <Grid container>
-                    <Button variant="contained" color="secondary" component={Link} to="/datasiswa/create" >
-                        <NoteAddIcon className={classes.NoteIcon} />
-                        Tambah data Siswa
+                    <Grid item>
+                        <Button variant="contained" color="secondary" component={Link} to="/datasiswa/create" >
+                            <NoteAddIcon className={classes.NoteIcon} />
+                            Tambah data Siswa
                     </Button>
-
-                  {TableData}
+                    </Grid>
+                    
+                 
+                    <Grid item>
+                        {TableData}
+                    </Grid>
+                  
 
                 </Grid>
             </div>

@@ -1,4 +1,4 @@
-import { GET_ALL_MURID} from '../actions/types';
+import { GET_ALL_MURID, RAPOT_MURID_LOADING} from '../actions/types';
 
 const initialState ={
     murids:null,
@@ -12,6 +12,11 @@ export default function(state = initialState,action ){
                 ...state,
                 murids:action.payload,
                 loading:false
+            }
+        case RAPOT_MURID_LOADING:
+            return{
+                ...state,
+                loading:true
             }
         default:
             return state;

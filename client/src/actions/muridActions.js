@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_ALL_MURID } from './types';
+import { GET_ERRORS, GET_ALL_MURID, RAPOT_MURID_LOADING } from './types';
 
 export const createNewMurid = (dataMurid,history) => disbatch =>{
     axios.post('/api/murids/datasiswa/create',dataMurid)
@@ -16,6 +16,7 @@ export const createNewMurid = (dataMurid,history) => disbatch =>{
 }
 
 export const getAllMurid = () => dispatch =>{
+    dispatch(setRapotLoading());
     axios.get('/api/murids/datasiswa/all')
         .then(res=>
             dispatch({
@@ -29,4 +30,11 @@ export const getAllMurid = () => dispatch =>{
                 payload:{}
             })
             )
+}
+
+// Loading Get Rapot siswa
+export const setRapotLoading = () =>{
+    return{
+        type:RAPOT_MURID_LOADING
+    }
 }
