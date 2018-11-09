@@ -1,15 +1,58 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_ALL_MURID, RAPOT_MURID_LOADING } from './types';
+import { GET_ERRORS, GET_ALL_MURID, RAPOT_MURID_LOADING,GET_RAPOT_MURID } from './types';
 
-export const createNewMurid = (dataMurid,history) => disbatch =>{
-    axios.post('/api/murids/datasiswa/create',dataMurid)
+// export const createNewMurid = (dataMurid,history) => disbatch =>{
+//     axios.post('/api/murids/datasiswa/create',dataMurid)
+//         .then(res =>
+//             history.push('/rapotsiswa')
+//         )
+//         .catch(err=>
+//             disbatch({
+//                 type:GET_ERRORS,
+//                 payload:err.response.data
+//             })
+//         );
+
+// }
+
+export const getRapotMurid = (nis) => disbatch =>{
+    axios.get('/api/murids/datasiswa/rapot/'+nis)
+    
+        .then(res=>{
+            disbatch({
+                type: GET_RAPOT_MURID,
+                payload:res.data
+            })
+        })
+        .catch(err => {
+            disbatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        });
+}
+
+export const createNewMurid = (dataMurid,foto, history) => disbatch => {
+    let url = '/api/murids/datasiswa/create';
+    let config = { headers: { 'Content-Type': 'multipart/form-data' } };
+    let data = new FormData();
+    let newMurid = JSON.stringify(dataMurid);
+    data.append('fotoDisplay',foto);
+    data.append('newMurid',newMurid);
+    axios(
+        {
+            data: data,
+            method: 'post',
+            url:url,
+            config: { headers: { 'Content-Type': 'multipart/form-data' } }
+        })
         .then(res =>
             history.push('/rapotsiswa')
         )
-        .catch(err=>
+        .catch(err =>
             disbatch({
-                type:GET_ERRORS,
-                payload:err.response.data
+                type: GET_ERRORS,
+                payload: err.response.data
             })
         );
 

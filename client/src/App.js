@@ -12,9 +12,10 @@ import Dashboard from './components/pages/Dashboard';
 import Penjurusan from './components/pages/Penjurusan';
 import PenjurusanCreate from './components/pages/PenjurusanCreate';
 import DataPenjurusanSiswa from './components/pages/DataPenjurusanSiswa';
-import RapotSiswa from './components/pages/RapotSiswa';
+import RapotSiswa from './components/pages/RapotSiswa/RapotSiswa';
 import ProfileAdmin from './components/pages/ProfileAdmin';
 import DataSiswaCreate from './components/pages/DataSiswaCreate';
+import Rapot from './components/pages/RapotSiswa/Rapot';
 import './App.css';
 
 // Check for token 
@@ -48,11 +49,12 @@ class App extends Component {
           <Switch>
               <PrivateRoute path="/" exact component={Dashboard} />
               <PrivateRoute path="/penjurusan" exact  component={Penjurusan} />
-              <PrivateRoute path="/penjurusan/create" component={PenjurusanCreate} />
-              <PrivateRoute path="/datapenjurusansiswa" component={DataPenjurusanSiswa} />
-              <PrivateRoute path="/rapotsiswa" component={RapotSiswa}/> 
-              <PrivateRoute path="/profileadmin" component={ProfileAdmin}/> 
-              <PrivateRoute path="/datasiswa/create" component={DataSiswaCreate}/>
+                <PrivateRoute path="/penjurusan/create" exact component={PenjurusanCreate} />
+                <PrivateRoute path="/datapenjurusansiswa" exact component={DataPenjurusanSiswa} />
+                <PrivateRoute path="/rapotsiswa" exact component={RapotSiswa}/> 
+              <PrivateRoute path="/profileadmin" exact component={ProfileAdmin}/> 
+                <PrivateRoute path="/datasiswa/create" exact component={DataSiswaCreate}/>
+                <PrivateRoute path="/rapotsiswa/:nis" exact component={Rapot}/>
           </Switch>
         </MainLayout>
       </Switch>

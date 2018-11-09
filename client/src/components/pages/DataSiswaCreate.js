@@ -73,7 +73,7 @@ class DataSiswaCreate extends Component {
             nama:'',
             tanggalLahir:'',
             btnImage:true,
-            foto:'',
+            fotoDisplay:'',
             namaAyah:'',
             namaIbu:'',
             noTelepon:'',
@@ -81,7 +81,8 @@ class DataSiswaCreate extends Component {
             hpIbu:'',
             hpAyah:'',
             alamat:'',
-            errors:{}
+            errors:{},
+            foto:null
         }
     }
     onChange = name=> event => {
@@ -91,9 +92,10 @@ class DataSiswaCreate extends Component {
 
     handlerFoto = name=>e =>{
         if(e.target.files && e.target.files[0]){
+            this.setState({foto:e.target.files[0]});
             let reader = new FileReader();
             reader.onload = (e) =>{
-                this.setState({[name]:e.target.result});
+                this.setState({fotoDisplay:e.target.result});
                
             };
             reader.readAsDataURL(e.target.files[0]);
@@ -120,9 +122,12 @@ class DataSiswaCreate extends Component {
             hpSiswa: this.state.hpSiswa,
             hpIbu: this.state.hpIbu,
             hpAyah:this.state.hpAyah,
-            alamat:this.state.alamat
+            alamat:this.state.alamat,
+            
         }
-        this.props.createNewMurid(muridData,this.props.history);
+        const foto =this.state.foto;
+        
+        this.props.createNewMurid(muridData, foto,this.props.history);
         
     }
 
@@ -130,8 +135,9 @@ class DataSiswaCreate extends Component {
     render() {
         const { classes } = this.props;
         const { errors } = this.state;
-        console.log(errors);
+      
         const kota =  ['Bandung', 'Jakarta', 'Padang', 'Bali', 'Bekasi'];
+        
         let buttonImage;
         let uploadedFoto;
         if(this.state.btnImage){
@@ -155,11 +161,11 @@ class DataSiswaCreate extends Component {
                
             )
         }
-        if(this.state.foto !== ''){
+        if(this.state.fotoDisplay !== ''){
             uploadedFoto=(
                 <Card>
                     <CardMedia >
-                        <img src={this.state.foto} className={classes.fotoMurid} alt="foto" />
+                        <img src={this.state.fotoDisplay} className={classes.fotoMurid} alt="foto" />
                     </CardMedia>
 
                 </Card> 
@@ -167,7 +173,7 @@ class DataSiswaCreate extends Component {
         }     
         return (
             <div className={classes.SiswaCreate}>
-            <form onSubmit={this.onSubmit}>
+                <form onSubmit={this.onSubmit} >
           
                 <Typography variant="h4">
                     Tambah Data Siswa

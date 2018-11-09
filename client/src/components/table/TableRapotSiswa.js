@@ -18,7 +18,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
-
+import Button from '@material-ui/core/Button';
+import BuildIcon from '@material-ui/icons/Build';
+import {Link} from 'react-router-dom'
 let counter = 0;
 function createData(name, calories, fat, carbs, protein) {
     counter += 1;
@@ -54,7 +56,7 @@ const rows = [
     { id: 'nama', numeric: true, disablePadding: false, label: 'Nama Siswa' },
     { id: 'tanggalLahir', numeric: true, disablePadding: false, label: 'Tanggal Lahir' },
     { id: 'jenisKelamin', numeric: true, disablePadding: false, label: 'Jenis Kelamin' },
-
+    { id: 'tableAction', numeric: true, disablePadding: false, label: ' ' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -97,8 +99,11 @@ class EnhancedTableHead extends React.Component {
                                     </TableSortLabel>
                                 </Tooltip>
                             </TableCell>
+
+                        
                         );
                     }, this)}
+              
                 </TableRow>
             </TableHead>
         );
@@ -196,6 +201,9 @@ const styles = theme => ({
     },
     tableWrapper: {
         overflowX: 'auto',
+    },
+    button: {
+        margin: theme.spacing.unit,
     },
 });
 
@@ -298,7 +306,7 @@ class EnhancedTable extends React.Component {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(event, n._id)}
+                                            
                                             role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}
@@ -306,7 +314,7 @@ class EnhancedTable extends React.Component {
                                             selected={isSelected}
                                         >
                                             <TableCell padding="checkbox">
-                                                <Checkbox checked={isSelected} />
+                                                <Checkbox checked={isSelected} onClick={event => this.handleClick(event, n._id)}/>
                                             </TableCell>
                                             <TableCell component="th" scope="row" padding="none">
                                                 {n.nis}
@@ -315,6 +323,11 @@ class EnhancedTable extends React.Component {
                                             <TableCell numeric>{n.nama}</TableCell>
                                             <TableCell numeric>{n.tanggalLahir}</TableCell>
                                             <TableCell numeric>{n.jenisKelamin}</TableCell>
+                                            <TableCell numeric>           
+                                                <Button aria-label="Edit" component={Link} to={`rapotsiswa/${n.nis}`}>
+                                                    <BuildIcon />
+                                                </Button>
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}

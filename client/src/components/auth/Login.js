@@ -70,7 +70,8 @@ class Login extends React.Component {
       
         this.setState({[e.target.name]:e.target.value});
     }
-    handlerSubmitLogin = ()=>{
+    handlerSubmitLogin = (e)=>{
+        e.preventDefault();
         const adminData ={
             email:this.state.email,
             password:this.state.password
@@ -141,6 +142,7 @@ class Login extends React.Component {
                            
                            {loadingBar}
                             <CardContent>
+                                <form onSubmit={this.handlerSubmitLogin}>
                                 <Typography variant="h6" className={classes.formloginTitle}>
                                     Admin Login
                                 </Typography>
@@ -190,11 +192,11 @@ class Login extends React.Component {
                                     }
                                     label="Remember me"
                                 />
-                                <Button variant="contained" fullWidth color="primary" style={{ marginTop: 50 }} onClick={this.handlerSubmitLogin}>
+                                <Button variant="contained" fullWidth color="primary" style={{ marginTop: 50 }} type="submit" >
                                         Sign In
                                     </Button>
                            
-                               
+                                </form>
                             </CardContent>
                         </Card>
                     </Grid>
