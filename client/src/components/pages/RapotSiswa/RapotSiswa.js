@@ -25,16 +25,16 @@ class RapotSiswa extends Component {
 
     render() {
         const { classes } = this.props;
-        const {murids} = this.props.murids;
+        const {murids,loading} = this.props.murids;
         let TableData;
-        
-        if(murids !== null){
-            TableData=(
-                <EnhancedTableHead data={murids} />
+        if(loading || murids === null){
+           
+            TableData = (
+                <Spinner />
             )
         }else{
-            TableData=(
-                <Spinner/>
+            TableData = (
+                <EnhancedTableHead data={murids} />
             )
         }
         return (

@@ -38,7 +38,7 @@ const passport = require('passport');
 // ROUTER
 const admins = require('./routes/api/admins');
 const murids = require('./routes/api/murids');
-
+const rapots = require('./routes/api/rapots');
 const app = express();
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -49,7 +49,7 @@ const db = require('./config/keys').mongoURI;
 
 // Connect to MongoDB
 mongoose
-    .connect(db, { useNewUrlParser: true })
+    .connect(db, { useNewUrlParser: true, useCreateIndex: true,})
     .then(() => {
         console.log('MongoDB Connected ');
     })
@@ -62,6 +62,7 @@ app.use(passport.initialize());
 require('./config/passport')(passport);
 app.use('/api/admin', admins);
 app.use('/api/murids',murids);
+app.use('/api/rapots',rapots);
 const port = process.env.PORT || 5050;
 
 app.listen(port, () => {

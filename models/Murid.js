@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const MuridSchema = new Schema({
     nis:{
         type:String,
+        unique: true,
         required:true
     },
     nama:{
@@ -49,5 +50,11 @@ const MuridSchema = new Schema({
 
 
 });
-
+const Rapot = require('./Rapot');
+MuridSchema.pre('remove', function (next) {
+    // 'this' is the client being removed. Provide callbacks here if you want
+    // to be notified of the calls' result.
+    Rapot.remove({ murid: this._id }).exec();
+    next();
+});
 module.exports = Murid = mongoose.model('Murid',MuridSchema);

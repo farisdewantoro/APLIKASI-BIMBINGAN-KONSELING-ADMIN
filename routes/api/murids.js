@@ -20,7 +20,17 @@ let upload = multer({
     limits:{fileSize:1000000}, //file size dalam bit
 }).fields([{ name: 'fotoDisplay' }, { name: 'newMurid' }]);
 
-
+router.delete('/datasiswa/delete/:nis',(req,res)=>{
+   
+    Murid.findOne({nis:req.params.nis})
+        .then((murid) =>{
+            murid.remove();
+            res.json({success:true});
+        })
+        .catch(err =>{
+            res.status(404).json(err);
+        });
+});
 
 // // Public folder
 
@@ -69,12 +79,42 @@ router.get('/datasiswa/rapot/:nis',(req,res)=>{
         }));
 });
 
+router.put('/datasiswa/edit/:nis',(req,res) =>{
+    const { errors, isValid } = validateMuridInput(req.body);
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+    const muridFields = {};
+    if (req.body.tempatLahir) muridFields.tempatLahir = req.body.tempatLahir;
+    if (req.body.jenisKelamin) muridFields.jenisKelamin = req.body.jenisKelamin;
+    if (req.body.nis) muridFields.nis = req.body.nis;
+    if (req.body.nama) muridFields.nama = req.body.nama;
+    if (req.body.tanggalLahir) muridFields.tanggalLahir = req.body.tanggalLahir;
+    if (req.body.namaAyah) muridFields.namaAyah = req.body.namaAyah;
+    if (req.body.namaIbu) muridFields.namaIbu = req.body.namaIbu;
+    if (req.body.noTelepon) muridFields.noTelepon = req.body.noTelepon;
+    if (req.body.hpSiswa) muridFields.hpSiswa = req.body.hpSiswa;
+    if (req.body.hpIbu) muridFields.hpIbu = req.body.hpIbu;
+    if (req.body.hpAyah) muridFields.hpAyah = req.body.hpAyah;
+    if (req.body.alamat) muridFields.alamat = req.body.alamat;
 
+    Murid.findOneAndUpdate({nis:req.body.nis},{$set:muridFields})
+        .then(murid =>{
+           res.json(murid);
+        })
+        .catch(err=>{
+            res.status(404).json(err)
+        })
+}); 
 
 // @route buat edit/create murid baru
 router.post('/datasiswa/create', upload,(req,res)=>{
    
     let request = JSON.parse(req.body.newMurid);
+    const { errors, isValid } = validateMuridInput(request);
+    if (!isValid) {
+            return res.status(400).json(errors);
+        }
     const muridFields = {};
     if (request.tempatLahir) muridFields.tempatLahir = request.tempatLahir;
     if (request.jenisKelamin) muridFields.jenisKelamin = request.jenisKelamin;
@@ -93,16 +133,14 @@ router.post('/datasiswa/create', upload,(req,res)=>{
             if(murid){
                 errors.nis = 'NIS ini sudah terdaftar';
                 return res.status(400).json(errors);
-            }else{
-                
+            }else{    
                 const newMurid = new Murid(muridFields);
-
                 newMurid.save()
                     .then((murid)=>{
                         res.json(murid);
                     })
                     .catch((err)=>{
-                        console.log(err);
+                        res.status(404).json(err);
                     });
 
 

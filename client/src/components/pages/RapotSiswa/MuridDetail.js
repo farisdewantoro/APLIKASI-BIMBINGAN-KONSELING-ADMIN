@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
+
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
 
-import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import TextField from '@material-ui/core/TextField';
@@ -24,14 +23,15 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 
 import FormHelperText from '@material-ui/core/FormHelperText';
-import CardContent from '@material-ui/core/CardContent';
+
 const styles = theme => ({
   root: {
     width: '100%',
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
-    textTransform:'uppercase'
+    textTransform:'uppercase',
+   
   },
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
@@ -75,18 +75,18 @@ function MuridDetail(props) {
   const {murid} = props;
   return (
     <div className={classes.root}>
-      <ExpansionPanel >
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <ExpansionPanel expanded={props.expanded} >
+              <ExpansionPanelSummary onClick={props.onClickExpanded} expandIcon={<ExpandMoreIcon  />}>
           <div className={classes.column}>
-            <Typography className={classes.heading}>NIS</Typography>
+                      <Typography className={classes.heading}> <strong>NIS</strong> </Typography>
             <Typography className={classes.heading}>{murid.nis}</Typography>
           </div>
           <div className={classes.column}>
-            <Typography className={classes.heading}>NAMA</Typography>
+                      <Typography className={classes.heading}> <strong>NAMA</strong> </Typography>
             <Typography className={classes.heading}>{murid.nama}</Typography>
           </div>
             <div className={classes.column}>
-            <Typography className={classes.heading}>TANGGAL LAHIR</Typography>
+                      <Typography className={classes.heading}> <strong>TANGGAL LAHIR</strong> </Typography>
             <Typography className={classes.heading}>{murid.tanggalLahir}</Typography>
           </div>
         </ExpansionPanelSummary>
@@ -103,6 +103,7 @@ function MuridDetail(props) {
                                       style={{ margin: 10 }}
                                       fullWidth
                                       margin="normal"
+                                      disabled
                                       InputLabelProps={{
                                           shrink: true,
                                       }}
@@ -113,6 +114,7 @@ function MuridDetail(props) {
                                       label="Nama"
                                       name="nama"
                               value={murid.nama}
+                              onChange={props.onChange}
                                       style={{ margin: 10 }}
                                       fullWidth
                                       margin="normal"
@@ -125,6 +127,7 @@ function MuridDetail(props) {
                                       id="filled-full-width"
                                       label="Nama Ayah"
                                       name="namaAyah"
+                              onChange={props.onChange}
                               value={murid.namaAyah}
                               
                                 
@@ -140,6 +143,7 @@ function MuridDetail(props) {
                                       label="Nama Ibu"
                                       name="namaIbu"
                                value={murid.namaIbu}
+                              onChange={props.onChange}
                                       style={{ margin: 10 }}
                                       fullWidth
                                       margin="normal"
@@ -153,6 +157,7 @@ function MuridDetail(props) {
                                       name="noTelepon"
                                       type="number"
                               value={murid.noTelepon}
+                              onChange={props.onChange}
                                       style={{ margin: 10 }}
                                       fullWidth
                                       margin="normal"
@@ -165,6 +170,7 @@ function MuridDetail(props) {
                                       label="HP.Siswa"
                                       name="hpSiswa"
                                       type="number"
+                              onChange={props.onChange}
                               value={murid.hpSiswa}
                                       style={{ margin: 10 }}
                                       fullWidth
@@ -178,6 +184,7 @@ function MuridDetail(props) {
                                       label="HP.Ayah"
                                       name="hpAyah"
                                       type="number"
+                              onChange={props.onChange}
                               value={murid.hpAyah}
                                       style={{ margin: 10 }}
                                       fullWidth
@@ -191,6 +198,7 @@ function MuridDetail(props) {
                                       label="HP.Ibu"
                                       name="hpIbu"
                                       type="number"
+                              onChange={props.onChange}
                               value={murid.hpIbu}
                                       style={{ margin: 10 }}
                                       fullWidth
@@ -206,19 +214,20 @@ function MuridDetail(props) {
                                   <FormControl fullWidth
                                   
 
-                                      className={classes.formControl} margin="normal"
+                                          className={classes.formControl} margin="normal"
                                       style={{ margin: 10 }} >
                                       <InputLabel htmlFor="tempat-lahir">Tempat Lahir</InputLabel>
                                       <Select
-                                 
+                                            value={murid.tempatLahir}
+                                  onChange={props.onChange}
                                           inputProps={{
                                               name: 'tempatLahir',
                                               id: 'tempat-lahir',
                                           }}
                                       >
                                           
-                                              <MenuItem key="{kt} "value="{kt}">
-                                                 asd
+                                              <MenuItem key="{kt} "value={murid.tempatLahir}>
+                                      {murid.tempatLahir}
                                               </MenuItem>
                                         
                                       </Select>
@@ -232,6 +241,7 @@ function MuridDetail(props) {
                                       type="datetime-local"
                                       margin="normal"
                                       name="tanggalLahir"
+                              onChange={props.onChange}
                               value={murid.tanggalLahir}
                                       fullWidth
                                   
@@ -249,7 +259,8 @@ function MuridDetail(props) {
                                       <RadioGroup
                                           aria-label="jenisKelamin"
                                           name="jenisKelamin"
-
+                                        onChange={props.onChange}
+                                        value={murid.jenisKelamin}
                                           row
                                           margin="normal"
                                           style={{ margin: 10 }}
@@ -273,6 +284,7 @@ function MuridDetail(props) {
                                       label="Alamat"
                                       name="alamat"
                                       multiline
+                              onChange={props.onChange}
                               value={murid.alamat}
                                       rows="4"
                                       variant="outlined"
@@ -295,8 +307,8 @@ function MuridDetail(props) {
         </ExpansionPanelDetails>
         <Divider />
         <ExpansionPanelActions>
-          <Button size="small">Cancel</Button>
-          <Button size="small" color="primary">
+                  <Button size="small" onClick={props.onClickCancel} >Cancel</Button>
+                  <Button size="small" color="primary" onClick={props.onClickSubmit}>
             Save
           </Button>
         </ExpansionPanelActions>

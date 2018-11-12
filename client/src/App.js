@@ -16,6 +16,8 @@ import RapotSiswa from './components/pages/RapotSiswa/RapotSiswa';
 import ProfileAdmin from './components/pages/ProfileAdmin';
 import DataSiswaCreate from './components/pages/DataSiswaCreate';
 import Rapot from './components/pages/RapotSiswa/Rapot';
+import RapotSemester from './components/pages/RapotSiswa/RapotSemester';
+// import KelolaRapotSiswa from './components/pages/RapotSiswa/KelolaRapotSiswa';
 import './App.css';
 
 // Check for token 
@@ -55,6 +57,8 @@ class App extends Component {
               <PrivateRoute path="/profileadmin" exact component={ProfileAdmin}/> 
                 <PrivateRoute path="/datasiswa/create" exact component={DataSiswaCreate}/>
                 <PrivateRoute path="/rapotsiswa/:nis" exact component={Rapot}/>
+                <PrivateRoute path="/rapotsiswa/:nis/:kelas/:semester" exact component={RapotSemester}/>
+                {/* <PrivateRoute path="/rapotsiswa/kelola/:nis" exact component={KelolaRapotSiswa} /> */}
           </Switch>
         </MainLayout>
       </Switch>
