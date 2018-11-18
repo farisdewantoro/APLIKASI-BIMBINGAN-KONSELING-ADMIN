@@ -192,7 +192,7 @@ class RapotSemester extends Component {
 
     render() {
         const { murid,rapot } = this.state;
-        const {} = this.state;
+   
         const { classes } = this.props;
     
         return (
@@ -369,5 +369,4 @@ const mapStateToProps = (state) => ({
 export default
     compose(
         withStyles(styles, { name: "RapotSemester" }),
-        connect(mapStateToProps, { getRapotMurid, createRapotMurid, getDataRapotMurid }))(withRouter
-            (RapotSemester));
+        connect(mapStateToProps, { getRapotMurid, createRapotMurid, getDataRapotMurid }))(withRouter(RapotSemester));

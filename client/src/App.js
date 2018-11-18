@@ -19,6 +19,7 @@ import Rapot from './components/pages/RapotSiswa/Rapot';
 import RapotSemester from './components/pages/RapotSiswa/RapotSemester';
 // import KelolaRapotSiswa from './components/pages/RapotSiswa/KelolaRapotSiswa';
 import './App.css';
+import ShowRapotSiswa from './components/pages/RapotSiswa/ShowRapotSiswa';
 
 // Check for token 
 if(localStorage.jwtToken){
@@ -58,6 +59,7 @@ class App extends Component {
                 <PrivateRoute path="/datasiswa/create" exact component={DataSiswaCreate}/>
                 <PrivateRoute path="/rapotsiswa/:nis" exact component={Rapot}/>
                 <PrivateRoute path="/rapotsiswa/:nis/:kelas/:semester" exact component={RapotSemester}/>
+                <PrivateRoute path="/rapotsiswa/data/:nis/:kelas/:semester" exact component={ShowRapotSiswa}/>
                 {/* <PrivateRoute path="/rapotsiswa/kelola/:nis" exact component={KelolaRapotSiswa} /> */}
           </Switch>
         </MainLayout>

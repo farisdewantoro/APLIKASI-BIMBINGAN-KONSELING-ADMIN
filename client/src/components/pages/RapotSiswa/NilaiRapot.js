@@ -31,22 +31,22 @@ class NilaiRapot extends React.Component {
         rapots:[
             {kelas:'Kelas 10',semester:[
             {
-                nama:'Rapot Nilai Semester I',
+                nama:'Nilai Semester I',
                 link:`/rapotsiswa/${this.props.murid.nis}/kelas10/semester1`
             },
             {
-                nama: 'Rapot Nilai Semester II',
+                nama: 'Nilai Semester II',
                 link: `/rapotsiswa/${this.props.murid.nis}/kelas10/semester2`
             },
             ]},
             {
                 kelas: 'Kelas 11', semester: [
                     {
-                        nama: 'Rapot Nilai Semester I',
+                        nama: 'Nilai Semester I',
                         link: `/rapotsiswa/${this.props.murid.nis}/kelas11/semester1`
                     },
                     {
-                        nama: 'Rapot Nilai Semester II',
+                        nama: 'Nilai Semester II',
                         link: `/rapotsiswa/${this.props.murid.nis}/kelas11/semester2`
                     },
                 ]
@@ -54,11 +54,11 @@ class NilaiRapot extends React.Component {
             {
                 kelas: 'Kelas 12', semester: [
                     {
-                        nama: 'Rapot Nilai Semester I',
+                        nama: 'Nilai Semester I',
                         link: `/rapotsiswa/${this.props.murid.nis}/kelas12/semester1`
                     },
                     {
-                        nama: 'Rapot Nilai Semester II',
+                        nama: 'Nilai Semester II',
                         link: `/rapotsiswa/${this.props.murid.nis}/kelas12/semester2`
                     },
                 ]

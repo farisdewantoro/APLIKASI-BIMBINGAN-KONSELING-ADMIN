@@ -15,8 +15,9 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { withRouter } from 'react-router-dom';
 import NilaiRapot from './NilaiRapot';
+import DataNilaiRapot from './DataNilaiRapot';
 import Typography from '@material-ui/core/Typography';
-import {Link} from 'react-router-dom';
+
 class Rapot extends Component {
     constructor(props) {
         super(props);
@@ -121,10 +122,15 @@ class Rapot extends Component {
         const dataMurid = this.props.rapot.murid;
         console.log(this.props);
         let rapotSiswa;
+        let dataRapotSiswa;
         if (dataMurid !== null ){
             rapotSiswa = (
                 <NilaiRapot murid={dataMurid} />
+            );
+            dataRapotSiswa = (
+                <DataNilaiRapot murid={dataMurid}/>
             )
+
         }
      
         return (
@@ -169,26 +175,46 @@ class Rapot extends Component {
                 onClickExpanded={this.handleExpanded}  
                 expanded={expanded} 
                 onClickCancel={this.handleCancelEdit}
-                    onClickSubmit={this.handleSubmitEdit}/>
-
-
-                <Grid container style={{marginTop:20}}>
-                    <Card>
-                        <CardContent>
-                            <Grid container
-                                direction="row"
-                                justify="space-between"
-                                style={{marginBottom:20}}>
-                                <Typography variant="h6">
-                                    Nilai Rapot
+                onClickSubmit={this.handleSubmitEdit}/>
+                <Grid container style={{marginTop:20}} spacing={16}>
+                <Grid item> 
+                        <Card>
+                            <CardContent>
+                                <Grid container
+                                    direction="row"
+                                    justify="space-between"
+                                    style={{ marginBottom: 20 }}>
+                                    <Typography variant="h6">
+                                      Kelola Nilai Rapot
                             </Typography>
-                       
-                             
-                            </Grid>
-                                         
-                            {rapotSiswa}
-                        </CardContent>
-                    </Card>
+
+
+                                </Grid>
+
+                                {rapotSiswa}
+                            </CardContent>
+                        </Card>
+                </Grid>
+
+                <Grid item>
+                        <Card>
+                            <CardContent>
+                                <Grid container
+                                    direction="row"
+                                    justify="space-between"
+                                    style={{ marginBottom: 20 }}>
+                                    <Typography variant="h6">
+                                       Data Nilai Rapot
+                            </Typography>
+
+
+                                </Grid>
+
+                                {dataRapotSiswa}
+                            </CardContent>
+                        </Card>
+                </Grid>
+                  
                     
                 </Grid>
 
