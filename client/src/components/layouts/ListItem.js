@@ -8,8 +8,8 @@ import {Link} from 'react-router-dom';
 import Divider from '@material-ui/core/Divider';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-
-
+import QuestionIcon from '@material-ui/icons/QuestionAnswer';
+import FindInPageIcon from '@material-ui/icons/FindInPage';
 export const mainListItems = (
     <div>
         <ListItem button component={Link} to='/'>
@@ -19,11 +19,32 @@ export const mainListItems = (
             <ListItemText primary="Dashboard" />
         </ListItem>
         <Divider />
-        <ListItem button component={Link} to='/penjurusan'>
+        {/* <ListItem button component={Link} to='/penjurusan'>
             <ListItemIcon>
                 <AccessibilityIcon />
             </ListItemIcon>
             <ListItemText primary="Penjurusan" />
+        </ListItem>
+        <Divider /> */}
+        <ListItem button component={Link} to='/pertanyaan/list'>
+            <ListItemIcon>
+                <QuestionIcon />
+            </ListItemIcon>
+            <ListItemText primary="Pertanyaan" />
+        </ListItem>
+        <Divider />
+        <ListItem button component={Link} to='/jurusan'>
+            <ListItemIcon>
+                <AccessibilityIcon />
+            </ListItemIcon>
+            <ListItemText primary="Jurusan" />
+        </ListItem>
+        <Divider />
+        <ListItem button component={Link} to='/konsultasi'>
+            <ListItemIcon>
+                <FindInPageIcon />
+            </ListItemIcon>
+            <ListItemText primary="Konsultasi" />
         </ListItem>
         <Divider />
         <ListItem button component={Link} to='/datapenjurusansiswa'>

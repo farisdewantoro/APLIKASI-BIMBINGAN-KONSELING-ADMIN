@@ -39,6 +39,7 @@ const passport = require('passport');
 const admins = require('./routes/api/admins');
 const murids = require('./routes/api/murids');
 const rapots = require('./routes/api/rapots');
+const konsultasi = require('./routes/api/konsultasi');
 const app = express();
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -63,6 +64,7 @@ require('./config/passport')(passport);
 app.use('/api/admin', admins);
 app.use('/api/murids',murids);
 app.use('/api/rapots',rapots);
+app.use('/api/konsultasi',konsultasi);
 const port = process.env.PORT || 5050;
 
 app.listen(port, () => {

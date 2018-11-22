@@ -9,8 +9,8 @@ import PrivateRoute from './components/common/PrivateRoute';
 import MainLayout from './components/layouts/MainLayout';
 import Login from './components/auth/Login';
 import Dashboard from './components/pages/Dashboard';
-import Penjurusan from './components/pages/Penjurusan';
-import PenjurusanCreate from './components/pages/PenjurusanCreate';
+// import Penjurusan from './components/pages/Penjurusan';
+// import PenjurusanCreate from './components/pages/PenjurusanCreate';
 import DataPenjurusanSiswa from './components/pages/DataPenjurusanSiswa';
 import RapotSiswa from './components/pages/RapotSiswa/RapotSiswa';
 import ProfileAdmin from './components/pages/ProfileAdmin';
@@ -20,6 +20,12 @@ import RapotSemester from './components/pages/RapotSiswa/RapotSemester';
 // import KelolaRapotSiswa from './components/pages/RapotSiswa/KelolaRapotSiswa';
 import './App.css';
 import ShowRapotSiswa from './components/pages/RapotSiswa/ShowRapotSiswa';
+import Pertanyaan from './components/pages/Pertanyaan/Pertanyaan';
+import CreatePertanyaan from './components/pages/Pertanyaan/CreatePertanyaan';
+import Jurusan from './components/pages/Jurusan/Jurusan';
+import CreateJurusan from './components/pages/Jurusan/CreateJurusan';
+import Konsultasi from './components/pages/Konsultasi/Konsultasi';
+
 
 // Check for token 
 if(localStorage.jwtToken){
@@ -51,8 +57,8 @@ class App extends Component {
         <MainLayout>
           <Switch>
               <PrivateRoute path="/" exact component={Dashboard} />
-              <PrivateRoute path="/penjurusan" exact  component={Penjurusan} />
-                <PrivateRoute path="/penjurusan/create" exact component={PenjurusanCreate} />
+              {/* <PrivateRoute path="/penjurusan" exact  component={Penjurusan} />
+                <PrivateRoute path="/penjurusan/create" exact component={PenjurusanCreate} /> */}
                 <PrivateRoute path="/datapenjurusansiswa" exact component={DataPenjurusanSiswa} />
                 <PrivateRoute path="/rapotsiswa" exact component={RapotSiswa}/> 
               <PrivateRoute path="/profileadmin" exact component={ProfileAdmin}/> 
@@ -60,7 +66,12 @@ class App extends Component {
                 <PrivateRoute path="/rapotsiswa/:nis" exact component={Rapot}/>
                 <PrivateRoute path="/rapotsiswa/:nis/:kelas/:semester" exact component={RapotSemester}/>
                 <PrivateRoute path="/rapotsiswa/data/:nis/:kelas/:semester" exact component={ShowRapotSiswa}/>
-                {/* <PrivateRoute path="/rapotsiswa/kelola/:nis" exact component={KelolaRapotSiswa} /> */}
+                <PrivateRoute path="/pertanyaan/list" exact component={Pertanyaan} />
+                <PrivateRoute path="/pertanyaan/create" exact component={CreatePertanyaan}/>
+                <PrivateRoute path="/jurusan" exact component={Jurusan}/>
+                <PrivateRoute path="/jurusan/create" exact component={CreateJurusan} />
+                <PrivateRoute path="/konsultasi" exact component={Konsultasi} />
+                
           </Switch>
         </MainLayout>
       </Switch>

@@ -1,0 +1,38 @@
+import { GET_LAST_KODEPERTANYAAN, LOADING_CREATE_PERTANYAAN, SET_NEW_PERTANYAAN, GET_ALL_PERTANYAAN } from '../actions/types';
+
+const initialState={
+    lastPertanyaan:null,
+    loading:false,
+    pertanyaan:null
+}
+
+
+export default function(state = initialState, action){
+    switch (action.type){
+        case LOADING_CREATE_PERTANYAAN:
+            return{
+                ...state,
+                loading:true
+            }
+        case SET_NEW_PERTANYAAN:
+            return{
+                ...state,
+                loading:false
+            }
+        case GET_ALL_PERTANYAAN:
+            return{
+                ...state,
+                loading:false,
+                pertanyaan:action.payload
+            }
+        case GET_LAST_KODEPERTANYAAN:
+            return{
+                ...state,
+                lastPertanyaan:action.payload,
+                loading:false
+            }
+        default:
+            return state;
+    }
+
+} 
