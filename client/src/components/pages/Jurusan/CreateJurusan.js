@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import {withRouter} from 'react-router-dom';
 import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
@@ -14,7 +14,7 @@ import Divider from '@material-ui/core/Divider';
 import Select from 'react-select';
 import Typography from '@material-ui/core/Typography';
 import { getAllPertanyaan } from '../../../actions/pertanyaanActions';
-import { setNewJurusan } from '../../../actions/jurusanActions';
+import { setNewJurusan, getJurusan } from '../../../actions/jurusanActions';
 import CardActions from '@material-ui/core/CardActions';
 import SaveIcon from '@material-ui/icons/Save';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -40,11 +40,7 @@ const styles = theme => ({
     }
 });
 
-const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-]
+
 
 
  class CreateJurusan extends Component {
@@ -55,25 +51,43 @@ const options = [
              namaJurusan:'',
              deskripsi:'',
              soal:null,
+             jawaban:null,
              rule:[{kodeSoal:null,kodeJawaban:null}],
+             
          }
      }
      componentDidMount = () => {
          this.props.getAllPertanyaan();
-
-
+ 
+         if (this.props.match.params._id !== undefined){
+             this.props.getJurusan(this.props.match.params._id);
+         }
+       
      }
-     componentWillReceiveProps = (nextProps)=>{
+
+     componentWillReceiveProps (nextProps){
         this.setState({pertanyaan:nextProps.pertanyaan.pertanyaan});
          let pertanyaan= nextProps.pertanyaan.pertanyaan;
+         let jurusan = nextProps.jurusan.jurusans;
          if(pertanyaan !== null){
-             const soal=[]; 
-            pertanyaan.filter(tanya=>{
+             const soal=[];
+             const jawaban=[]; 
+            pertanyaan.forEach(tanya=>{
                 soal.push({label:tanya.soal,value:tanya.kodeSoal});
+                tanya.jawaban.forEach(jwb=>{
+                    jawaban.push({label:jwb.jawab,value:jwb.kodeJawaban});
+                })
              })
-
+             this.setState({jawaban:jawaban});
              this.setState({soal:soal});
          }
+
+         if ('namaJurusan' in jurusan && this.props.match.params._id){
+             this.setState({ namaJurusan: jurusan.namaJurusan });
+             this.setState({deskripsi:jurusan.deskripsi});
+             this.setState({rule:jurusan.rule});
+         }
+ 
      }
      toggleClearable = () =>{
          this.setState(state => ({ isClearable: !state.isClearable }));
@@ -82,7 +96,6 @@ const options = [
      selectOnChange = (i,name) => (e) =>{
         let kodeSoalVal = this.state.rule.map((rule,index)=>{
             if (i !== index) return rule;
-    
             return{
                 ...rule,
                 [name]:e.value
@@ -98,6 +111,55 @@ const options = [
          this.setState({rule:this.state.rule.concat([{kodeSoal:null,kodeJawaban:null}])});
      }
 
+     handlerEditSoalValue = (i) =>{
+        if(typeof this.state.rule[i] !== 'undefined' 
+        && this.state.rule[i] !== null 
+        && this.state.soal !== null){
+            let rule = this.state.rule;
+            let soal = this.state.soal;
+            let newData = [];
+                rule.forEach((r,index)=>{
+                soal.forEach((soal)=>{
+                    if(soal.value === r.kodeSoal){
+                        newData.push({label:soal.label,value:soal.value});
+                    }
+                })
+            });
+
+            let defaultValue= newData.filter((data,index)=>{
+                return index === i;
+            })
+            return defaultValue;
+           
+
+        }
+     }
+
+     handlerEditJawabanValue = (i)=>{
+         if (typeof this.state.rule[i] !== 'undefined' 
+         && this.state.rule[i] !== null 
+         && this.state.jawaban !== null) {
+             let rule = this.state.rule;
+             let jawaban = this.state.jawaban;
+             let newData = [];
+             rule.forEach((r, index) => {
+                 jawaban.forEach((jawaban) => {
+                     if (jawaban.value === r.kodeJawaban) {
+                         newData.push({ label: jawaban.label, value: jawaban.value });
+                     }
+                 })
+             });
+
+             let defaultValue = newData.filter((data, index) => {
+                 return index === i;
+             })
+             return defaultValue;
+
+
+         }
+     }
+
+
      loadJawaban = (i) =>{
         let pertanyaan = this.state.pertanyaan;
         let rule = this.state.rule;
@@ -105,7 +167,7 @@ const options = [
         let kodeSoal;
         let dataOption = [];
           rule.filter((r,index)=>{
-            if(i == index){
+            if(i === index){
                 return kodeSoal=r.kodeSoal;
             }
             else{
@@ -114,7 +176,7 @@ const options = [
         });
 
         if(kodeSoal !==null){     
-            pertanyaan.filter((p, index) => {
+            pertanyaan.forEach((p, index) => {
                 if (p.kodeSoal === kodeSoal) {
                     listJawaban = p.jawaban;
                 }
@@ -122,7 +184,7 @@ const options = [
 
             if (listJawaban !== null && listJawaban !== undefined){
          
-                listJawaban.filter(list => {
+                listJawaban.forEach(list => {
                     dataOption.push({ label: list.jawab, value: list.kodeJawaban })
                 });
             }
@@ -134,21 +196,22 @@ const options = [
      onChange = (e) =>{
         this.setState({[e.target.name]:e.target.value});
      }
+     handlerDelete = (i)  =>{
+         this.setState(prevState=>({
+            rule:prevState.rule.filter((rule,index)=> index !== i)
+         }));
+     }
      onSubmit = () =>{
-        const dataJurusan ={
-            kodeSoal:"p2",
-            kodeJawaban:"p3",
-            kodeSoal:"p4",
-            kodeJawaban:"p5"
-        }
-
-        console.log(dataJurusan);
-        // const dataJurusan = {
-        //     rule:this.state.rule,
-        //     namaJurusan:this.state.namaJurusan,
-        //     deskripsi:this.state.deskripsi
-        // };
-        //  this.props.setNewJurusan(dataJurusan,this.props.history);
+         const dataJurusan = {
+             rule: this.state.rule,
+             namaJurusan: this.state.namaJurusan,
+             deskripsi: this.state.deskripsi
+         };
+         if(this.props.match.params._id !== undefined ){
+            dataJurusan["_id"]=this.props.match.params._id;
+         }
+       
+         this.props.setNewJurusan(dataJurusan,this.props.history);
      }
  
         
@@ -156,30 +219,38 @@ const options = [
   render() {
       const { classes } = this.props;
       const {loading} = this.props.pertanyaan;
-      const { soal, rule, namaJurusan,deskripsi} = this.state;
+      const { soal, rule, namaJurusan,deskripsi,pertanyaan} = this.state;
       let progressBar;
       let formRule;
-      if (!loading && soal !== null ){
+      
+      if (!loading && soal !== null && pertanyaan !== null){
           formRule=(
              rule.map((r,i)=>{
                  
                  return(
                      <Grid container direction="row" spacing={16} className={classes.rule} key={i}>
-                         <Grid item xs={6}>
+                         <Grid item xs={5}>
                              <Select
                                  options={soal}
+                                 value={this.handlerEditSoalValue(i)}
                                  placeholder="Pilih Pertanyaan"
                                  name="kodeSoal"
                                  onChange={this.selectOnChange(i,'kodeSoal')}
                              />
                          </Grid>
-                         <Grid item xs={6}>
+                         <Grid item xs={5}>
                              <Select
                                  placeholder="Pilih Jawaban"
-                                 name="kodeSoal"
+                                 name="kodeJawaban"
+                                 value={this.handlerEditJawabanValue(i)}
                                  options={this.loadJawaban(i)}
                                  onChange={this.selectOnChange(i,'kodeJawaban')}
                              />
+                         </Grid>
+                         <Grid item xs={2}>
+                            <Button onClick={()=>this.handlerDelete(i)}>
+                                <DeleteIcon/>
+                            </Button>
                          </Grid>
                      </Grid> 
                   
@@ -263,10 +334,11 @@ CreateJurusan.propTypes = {
     classes: PropTypes.object.isRequired,
     getAllPertanyaan: PropTypes.func.isRequired,
     setNewJurusan:PropTypes.func.isRequired,
-  
+    getJurusan:PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-    pertanyaan: state.pertanyaan
+    pertanyaan: state.pertanyaan,
+    jurusan:state.jurusan
 });
-export default compose(withStyles(styles, { name: 'CreateJurusan' }), connect(mapStateToProps, { getAllPertanyaan, setNewJurusan}))(withRouter(CreateJurusan));
+export default compose(withStyles(styles, { name: 'CreateJurusan' }), connect(mapStateToProps, { getAllPertanyaan, setNewJurusan, getJurusan}))(withRouter(CreateJurusan));

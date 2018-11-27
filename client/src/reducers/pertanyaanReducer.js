@@ -1,4 +1,4 @@
-import { GET_LAST_KODEPERTANYAAN, LOADING_CREATE_PERTANYAAN, SET_NEW_PERTANYAAN, GET_ALL_PERTANYAAN } from '../actions/types';
+import { GET_LAST_KODEPERTANYAAN, LOADING_CREATE_PERTANYAAN, SET_NEW_PERTANYAAN, GET_PERTANYAAN, GET_ALL_PERTANYAAN, DELETE_PERTANYAAN } from '../actions/types';
 
 const initialState={
     lastPertanyaan:null,
@@ -12,12 +12,25 @@ export default function(state = initialState, action){
         case LOADING_CREATE_PERTANYAAN:
             return{
                 ...state,
-                loading:true
+                loading:true,
+                pertanyaan: null
             }
         case SET_NEW_PERTANYAAN:
             return{
                 ...state,
                 loading:false
+            }
+        case GET_PERTANYAAN:
+            return{
+                ...state,
+                loading:false,
+                pertanyaan:action.payload
+            }
+        case DELETE_PERTANYAAN:
+            return{
+                ...state,
+                loading:false,
+                pertanyaan:action.payload
             }
         case GET_ALL_PERTANYAAN:
             return{
@@ -29,7 +42,8 @@ export default function(state = initialState, action){
             return{
                 ...state,
                 lastPertanyaan:action.payload,
-                loading:false
+                loading:false,
+                pertanyaan: null
             }
         default:
             return state;

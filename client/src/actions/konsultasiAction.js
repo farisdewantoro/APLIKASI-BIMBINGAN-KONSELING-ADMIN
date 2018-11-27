@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_ALL_JURUSAN, GET_ALL_PERTANYAAN, GET_QUESTION_KONSULTASI, LOADING_NEXT_QUESTION_KONSULTASI} from './types';
+import {  GET_QUESTION_KONSULTASI, LOADING_NEXT_QUESTION_KONSULTASI} from './types';
 
 
 export const getQuestionKonsultasi = (jawabanUser) =>disbatch=>{

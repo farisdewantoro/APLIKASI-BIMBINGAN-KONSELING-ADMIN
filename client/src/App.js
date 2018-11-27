@@ -68,10 +68,11 @@ class App extends Component {
                 <PrivateRoute path="/rapotsiswa/data/:nis/:kelas/:semester" exact component={ShowRapotSiswa}/>
                 <PrivateRoute path="/pertanyaan/list" exact component={Pertanyaan} />
                 <PrivateRoute path="/pertanyaan/create" exact component={CreatePertanyaan}/>
+                <PrivateRoute path="/pertanyaan/edit/:kodeSoal" exact component={CreatePertanyaan} />
                 <PrivateRoute path="/jurusan" exact component={Jurusan}/>
                 <PrivateRoute path="/jurusan/create" exact component={CreateJurusan} />
                 <PrivateRoute path="/konsultasi" exact component={Konsultasi} />
-                
+                <PrivateRoute path="/jurusan/edit/:_id" exact component={CreateJurusan}/>
           </Switch>
         </MainLayout>
       </Switch>

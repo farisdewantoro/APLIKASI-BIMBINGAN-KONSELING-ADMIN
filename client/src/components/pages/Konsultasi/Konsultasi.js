@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {connect} from "react-redux";
-import {compose} from 'redux';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -12,7 +11,18 @@ import {getAllJurusan} from '../../../actions/jurusanActions';
 import {getAllPertanyaan} from '../../../actions/pertanyaanActions';
 import { getQuestionKonsultasi} from '../../../actions/konsultasiAction';
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import { withStyles } from '@material-ui/core/styles';
+import {compose} from 'redux';
+import Divider from '@material-ui/core/Divider';
+const styles = (theme) =>({
+    headingSoal:{
+        fontWeight:600,
+    },
+    jawaban:{
+        padding:20,
+        fontSize:16
+    }
+});
 
  class Konsultasi extends Component {
      constructor(props){
@@ -36,11 +46,13 @@ import LinearProgress from '@material-ui/core/LinearProgress';
      }
 
      componentWillReceiveProps(nextProps){
-         if(nextProps.pertanyaan.pertanyaan){
-             this.setState({pertanyaan:nextProps.pertanyaan.pertanyaan});
+         let pertanyaan = nextProps.pertanyaan.pertanyaan;
+         let jurusan = nextProps.jurusan.jurusans;
+         if(pertanyaan){
+             this.setState({pertanyaan:pertanyaan});
          }
-         if (nextProps.jurusan.jurusans) {
-             this.setState({ jurusan: nextProps.jurusan.jurusans });
+         if (jurusan) {
+             this.setState({ jurusan: jurusan });
          }
          if(nextProps.konsultasi.pertanyaan.length > 0 ){
              this.setState({pertanyaan:nextProps.konsultasi.pertanyaan});
@@ -81,7 +93,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
   render() {
       const { nis, startQuestion, pertanyaan, index, endQuestion} = this.state;
-      const {konsultasi} = this.props;
+      const { classes } = this.props;
       let loadingNextQuestion = this.props.konsultasi.loading;
       let loadingPertanyaan = this.props.pertanyaan.loading;
       let loadingJurusan = this.props.jurusan.loading; 
@@ -94,7 +106,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
         )
     }
 
-        if(nis == '' || startQuestion == false || pertanyaan == null){
+        if(nis === '' || startQuestion === false || pertanyaan === null){
             formContainer=(
                 <div>
                     <Grid container direction="column" spacing={16}>
@@ -105,7 +117,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
                         </Grid>
 
                         <Grid item>
-                            <Button variant="contained" onClick={this.handlerStartQuestion}>
+                            <Button variant="contained" disabled={loadingJurusan || loadingPertanyaan} onClick={this.handlerStartQuestion}>
                                 MULAI TEST
                         </Button>
                         </Grid>
@@ -116,26 +128,37 @@ import LinearProgress from '@material-ui/core/LinearProgress';
                 </div>
                 
             )
-        } else if (pertanyaan.length > 0 && endQuestion == false && pertanyaan[index].hasOwnProperty('jawaban') ){
+        }
+         else if (pertanyaan.length > 0 && endQuestion === false && pertanyaan[index].hasOwnProperty('jawaban') ){
    
             formContainer=(
-                <Grid item>
-                    <Grid container direction="column" alignContent="center" justify="center" spacing={16}>
-                        <Grid item>
-                            <Typography>
+                <Grid item xs={12}>
+                    <Grid container spacing={24}>
+                        <Grid item xs={12} className={classes.headingSoal}>
+                            <Typography variant="h3">
                                 {pertanyaan[index].soal}
                             </Typography>
                         </Grid>
-                        {pertanyaan[index].jawaban.map((jawab,i)=>{
-                            return(
-                                <Grid item key={i}>
-                                    <Button variant="contained" fullWidth onClick={() => this.submitAnswer(pertanyaan[index].kodeSoal,jawab.kodeJawaban,i)}>
-                                        {jawab.jawab}
-                                    </Button>
-                                </Grid>
-                           
-                            )
-                        })}
+                        <Grid item xs={12}>
+                            <Divider />
+                        </Grid>
+                       
+
+                        <Grid item xs={12}>
+                            <Grid container direction="row" alignContent="center" justify="center" spacing={24}>
+                                {pertanyaan[index].jawaban.map((jawab, i) => {
+                                    return (
+                                        <Grid item xs={6} key={i}>
+                                            <Button disabled={loadingNextQuestion} variant="contained" color="primary" className={classes.jawaban} fullWidth onClick={() => this.submitAnswer(pertanyaan[index].kodeSoal, jawab.kodeJawaban, i)}>
+                                                {jawab.jawab}
+                                            </Button>
+                                        </Grid>
+
+                                    )
+                                })}
+                            </Grid>
+                        </Grid>
+                   
                        
                     </Grid>
                 </Grid>
@@ -200,7 +223,8 @@ Konsultasi.propTypes={
     konsultasi:PropTypes.object.isRequired,
     getAllPertanyaan:PropTypes.func.isRequired,
     getAllJurusan:PropTypes.func.isRequired,
-    getQuestionKonsultasi:PropTypes.func.isRequired
+    getQuestionKonsultasi:PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state)=>({
@@ -210,4 +234,4 @@ const mapStateToProps = (state)=>({
 });
 
 
-export default connect(mapStateToProps, { getAllPertanyaan, getAllJurusan, getQuestionKonsultasi})(Konsultasi);
+export default compose(withStyles(styles, { name:"Konsultasi"}),connect(mapStateToProps, { getAllPertanyaan, getAllJurusan, getQuestionKonsultasi}))(Konsultasi);

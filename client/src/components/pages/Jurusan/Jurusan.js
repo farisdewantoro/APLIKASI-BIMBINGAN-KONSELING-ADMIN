@@ -11,7 +11,9 @@ import { getAllPertanyaan } from '../../../actions/pertanyaanActions';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ListJurusan from './ListJurusan';
-
+import { Typography } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 
 const styles = theme => ({
@@ -36,11 +38,24 @@ const styles = theme => ({
       const loadingPertanyaan = this.props.pertanyaan.loading;
       const { pertanyaan } = this.props.pertanyaan;
       let progressBar;
-      if((!loading && jurusans !== null) && (!loadingPertanyaan && pertanyaan !== null) ){
+      if ((!loading && jurusans !== null && jurusans.length>0 ) && (!loadingPertanyaan && pertanyaan !== null && pertanyaan instanceof Array ) ){
           progressBar =(
               <ListJurusan jurusan={jurusans} pertanyaan={pertanyaan} />
           )
-      }else{
+      }
+     else if ((!loading && jurusans.length === 0 ) && (!loadingPertanyaan && pertanyaan !== null && pertanyaan instanceof Array)  ){
+        progressBar =(
+            <Card>
+                <CardContent>
+                    <Typography style={{textAlign:"center" }} variant="h4" >
+                        NO DATA
+            </Typography>
+                </CardContent>
+            </Card>
+        
+        )
+      }
+      else{
           progressBar=(
               <div>
                   <LinearProgress />

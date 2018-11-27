@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import ListPertanyaan from './ListPertanyaan';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/NoteAdd';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom';
@@ -31,12 +34,27 @@ const styles = theme => ({
     const { classes } = this.props;
     const {loading,pertanyaan} = this.props.pertanyaan;
     let progressBar;
-    if(!loading && pertanyaan !== null){
-      progressBar =(
-     
+    if (!loading && pertanyaan !== null && pertanyaan instanceof Array){
+      if(pertanyaan.length > 0){
+        progressBar = (
 
-        <ListPertanyaan data={pertanyaan} /> 
-      )
+
+          <ListPertanyaan data={pertanyaan} />
+        )
+      }else{
+        progressBar = (
+          
+              <Card>
+                <CardContent>
+                  <Typography variant="h3" style={{textAlign:"center"}}>
+                    NO DATA 
+                  </Typography>
+                </CardContent>
+              </Card>
+          
+        )
+      }
+  
     }else{
         progressBar=(
           <div>
