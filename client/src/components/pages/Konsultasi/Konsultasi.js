@@ -14,6 +14,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import {compose} from 'redux';
 import Divider from '@material-ui/core/Divider';
+import HasilKonsultasi from '../../chart/HasilKonsultasi';
 const styles = (theme) =>({
     headingSoal:{
         fontWeight:600,
@@ -21,6 +22,19 @@ const styles = (theme) =>({
     jawaban:{
         padding:20,
         fontSize:16
+    },
+    hasilJurusanHeading:{
+        borderRadius:'15px',
+        backgroundColor:"#3f51b5",
+    },
+    hasilTextJurusanHeading:{
+        color:"#fff",
+        padding:"10px 50px 10px 50px",
+    },
+    petKeterampilan:{
+        color:"#545251aa",
+        fontWeight:"bold",
+
     }
 });
 
@@ -36,14 +50,57 @@ const styles = (theme) =>({
              hasilJawaban:[],
              endQuestion:false,
              hasilAkhir:[],
+             randomNamaJurusan:'',
+             listNamaJurusan:[],
+             waktuAwal:null,
+             indexJurusan:0
          }
      }
 
      componentDidMount(){
          this.props.getAllJurusan();
          this.props.getAllPertanyaan();
+      
+        this.interval = setInterval(this.generateJurusan,100);
+    
+     }
+     generateJurusan=()=>{
+         let pertanyaan = this.state.pertanyaan;
+         if (this.state.jurusan !== null && this.state.listNamaJurusan.length > 0 && pertanyaan !== null) {
+             if (pertanyaan[this.state.index].hasOwnProperty('namaJurusan')) { 
+            this.setState({ indexJurusan: this.state.indexJurusan++ });
+             let listNamaJurusan = this.state.listNamaJurusan;
+             if (this.state.indexJurusan === listNamaJurusan.length) this.setState({ indexJurusan: 0 });
+             this.setState({ randomNamaJurusan: listNamaJurusan[this.state.indexJurusan++] });
+             if(new Date().getTime() - this.state.waktuAwal > 1000 ){
+                 clearInterval(this.interval);
+                 let dataJurusanMatched = [];
+                 let findValueData = [];
+                 pertanyaan.forEach((p) => {
+                     dataJurusanMatched.push({ value: p.dataMatched / p.maxLength * 100, nama: p.namaJurusan });
+                     findValueData.push(p.dataMatched / p.maxLength * 100);
+                 })
+                 let cariValue = Math.max(...findValueData);
+
+                 let hasilJurusan = dataJurusanMatched.filter((dJur) => {
+                     return dJur.value == cariValue;
+                 });
+                 let hasilNamaJurusan = hasilJurusan.map(hJur => {
+                     return hJur.nama;
+                 })
+                 this.setState({ randomNamaJurusan: hasilNamaJurusan.toString()})
+
+             }
+             }
+        }
 
      }
+
+     componentWillUnmount() {
+         clearInterval(this.interval);
+     }
+    
+  
 
      componentWillReceiveProps(nextProps){
          let pertanyaan = nextProps.pertanyaan.pertanyaan;
@@ -53,11 +110,18 @@ const styles = (theme) =>({
          }
          if (jurusan) {
              this.setState({ jurusan: jurusan });
+             let namaJurusan = jurusan.map(jur => {
+                 return jur.namaJurusan;
+             })
+             this.setState({ listNamaJurusan: namaJurusan});
          }
          if(nextProps.konsultasi.pertanyaan.length > 0 ){
              this.setState({pertanyaan:nextProps.konsultasi.pertanyaan});
          }
 
+         if (nextProps.konsultasi.pertanyaan.length > 0 && nextProps.konsultasi.pertanyaan[0].hasOwnProperty('namaJurusan')){
+            this.setState({waktuAwal:new Date().getTime()});
+         }
      }
 
      handlerNisChange =(e)=>{
@@ -84,15 +148,15 @@ const styles = (theme) =>({
          this.props.getQuestionKonsultasi(newData);
         }
 
-  
-
+        
  
+        
 
 
      
 
   render() {
-      const { nis, startQuestion, pertanyaan, index, endQuestion} = this.state;
+      const { nis, startQuestion, pertanyaan, index, endQuestion, randomNamaJurusan} = this.state;
       const { classes } = this.props;
       let loadingNextQuestion = this.props.konsultasi.loading;
       let loadingPertanyaan = this.props.pertanyaan.loading;
@@ -100,6 +164,48 @@ const styles = (theme) =>({
       let loadingComponent;
       let formContainer; 
 
+      
+    //   formContainer = (
+    //       <div>
+              
+    //           <Grid item xs={12}>
+    //               <Grid>
+    //                   <Grid container direction="column" alignItems="center" justify="center" spacing={8}>
+    //                       <Grid item >
+    //                           <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+    //                               Anda mungkin harus memilih
+    //                              </Typography>
+    //                       </Grid>
+
+    //                       <Grid item className={classes.hasilJurusanHeading}>
+    //                           <Typography variant="h4" className={classes.hasilTextJurusanHeading}>
+    //                               {/* {hasilNamaJurusan.toString()} */}
+
+    //                           </Typography>
+    //                       </Grid>
+    //                   </Grid>
+
+
+    //                   <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: 20, paddingBottom: 20 }}>
+    //                       <Grid item >
+    //                           <Typography variant="subtitle1" className={classes.petKeterampilan}>
+    //                               Peta Keterampilan
+    //                              </Typography>
+    //                       </Grid>
+
+    //                       <Grid item>
+    //                           {/* <HasilKonsultasi dataHasil={pertanyaan} /> */}
+    //                       </Grid>
+
+    //                   </Grid>
+
+    //               </Grid>
+    //           </Grid>
+
+    //       </div>
+
+    //   )
+    
     if(loadingJurusan || loadingPertanyaan || loadingNextQuestion){
         loadingComponent=(
             <LinearProgress color="secondary" variant="query" />
@@ -130,7 +236,7 @@ const styles = (theme) =>({
             )
         }
          else if (pertanyaan.length > 0 && endQuestion === false && pertanyaan[index].hasOwnProperty('jawaban') ){
-   
+         
             formContainer=(
                 <Grid item xs={12}>
                     <Grid container spacing={24}>
@@ -164,28 +270,46 @@ const styles = (theme) =>({
                 </Grid>
             )
         }else if(pertanyaan.length > 0 && pertanyaan[index].hasOwnProperty('namaJurusan')){
+          
+
             formContainer = (
                 <div>
-                    {pertanyaan.map((hasil, i) => {
-                      return(
-                          <Grid item key={i}>
-                            <Grid container>
-                                <Grid item>
-                                      <Typography>
-                                          {hasil.namaJurusan}
-                                      </Typography>
-                                      <Typography>
-                                          {hasil.dataMatched/hasil.maxLength*100}
-                                      </Typography>
+                   
+                        <Grid item xs={12}>
+                            <Grid>
+                                <Grid container direction="column" alignItems="center" justify="center" spacing={8}>
+                                    <Grid item >
+                                        <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
+                                            Anda mungkin harus memilih
+                                 </Typography>
+                                    </Grid>
+
+                                    <Grid item className={classes.hasilJurusanHeading}>
+                                        <Typography variant="h4" className={classes.hasilTextJurusanHeading}>
+                                        {randomNamaJurusan}
+                                 </Typography>
+                                    </Grid>
+                                </Grid>
+
+
+                                <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: 20, paddingBottom: 20 }}>
+                                    <Grid item >
+                                        <Typography variant="subtitle1" className={classes.petKeterampilan}>
+                                            Peta Keterampilan
+                                 </Typography>
+                                    </Grid>
+
+                                    <Grid item>
+                                        <HasilKonsultasi dataHasil={pertanyaan} />
+                                    </Grid>
+
                                 </Grid>
 
                             </Grid>
-                            
-
-
-                          </Grid>
-                      )  
-                    })}
+                        </Grid>
+          
+            
+           
                 </div>
             
             )
@@ -203,7 +327,7 @@ const styles = (theme) =>({
                 <Card>
                 {loadingComponent}
                     <CardContent>
-                    <Grid container>
+                    <Grid >
                         {formContainer}
                     </Grid>
                     </CardContent>

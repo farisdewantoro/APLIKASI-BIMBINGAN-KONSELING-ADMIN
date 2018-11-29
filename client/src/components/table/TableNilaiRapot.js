@@ -189,14 +189,17 @@ class TableNilaiRapot extends React.Component {
         if(rapot !== null){
             const emptyRows = rowsPerPage - Math.min(rowsPerPage, rapot.pelajaran.length - page * rowsPerPage);
             return (
+                <div>
+                    
                 <Paper className={classes.root}>
+                        <Button variant="contained">
+                            Export
+                 </Button>
                 <Toolbar>
                         <Typography color="inherit" variant="subtitle1">
                             Nilai Rapot
                  </Typography>
-                 <Button variant="contained">
-                        Export
-                 </Button>
+       
                 </Toolbar>
                 <Divider/>
                     <div className={classes.tableWrapper}>
@@ -260,6 +263,7 @@ class TableNilaiRapot extends React.Component {
                         onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     />
                 </Paper>
+                </div>
             );
         } 
        
