@@ -14,7 +14,8 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-
+import XLSX from 'xlsx';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -119,6 +120,12 @@ const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
     },
+    ButtonExport:{
+        margin: "10px 15px 10px 15px",
+    },
+    fileCopyIcon:{
+        marginLeft:theme.spacing.unit
+    }
 });
 
 class TableNilaiRapot extends React.Component {
@@ -128,8 +135,37 @@ class TableNilaiRapot extends React.Component {
         selected: [],
         page: 0,
         rowsPerPage: 5,
+        csvData:[
+            {
+                'name':'richard',
+                'email':'richard@test.com'
+            },
+            {
+                'name':'tes',
+                'email':'tes'
+            }
+        ]
     };
 
+    exportFile=()=>{
+      let murid = this.props.murid;
+      let kelas = this.props.kelas;
+      let semester = this.props.semester;
+       let dataCsv = [
+        ['NIS','Nama','Tanggal Lahir'],[murid.nis,murid.nama,murid.tanggalLahir],
+        ['Kelas','Semester'],[kelas,semester],
+       ['No','Mata Pelajaran','Nilai','Predikat']];
+       let nilaiRapot = this.props.rapot.pelajaran;
+       nilaiRapot.forEach((n,index)=>{
+           dataCsv.push([index+1,n.mataPelajaran,n.nilai,n.predikat]);
+       });
+        /* convert state to workbook */
+        const ws = XLSX.utils.aoa_to_sheet(dataCsv);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+        /* generate XLSX file and send to client */
+        XLSX.writeFile(wb, "sheetjs.xlsx")
+    }
     handleRequestSort = (event, property) => {
         const orderBy = property;
         let order = 'desc';
@@ -183,18 +219,19 @@ class TableNilaiRapot extends React.Component {
     render() {
         const { classes } = this.props;
         const { order, orderBy, rowsPerPage, page } = this.state;
-        let { rapot } = this.props;
+        let { rapot,murid } = this.props;
         console.log(this.props);
        
-        if(rapot !== null){
+        if(rapot !== null && murid !== null ){
             const emptyRows = rowsPerPage - Math.min(rowsPerPage, rapot.pelajaran.length - page * rowsPerPage);
             return (
                 <div>
                     
                 <Paper className={classes.root}>
-                        <Button variant="contained">
-                            Export
-                 </Button>
+                        <Button variant="contained" color="primary" onClick={this.exportFile} className={classes.ButtonExport}>
+                            Export 
+                            <FileCopyIcon className={classes.fileCopyIcon}/>
+                        </Button>
                 <Toolbar>
                         <Typography color="inherit" variant="subtitle1">
                             Nilai Rapot

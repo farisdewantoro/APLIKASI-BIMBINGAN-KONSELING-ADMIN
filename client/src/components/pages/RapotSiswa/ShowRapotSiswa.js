@@ -244,7 +244,11 @@ class ShowRapotSiswa extends Component {
             
             <Grid item xs={12}>
   
-                <TableNilaiRapot rapot={rapot}/>
+                    <TableNilaiRapot 
+                    rapot={rapot} 
+                    murid={murid} 
+                    kelas={rapot.namaKelas + ' ' + this.props.match.params.kelas.replace(/kelas/g, '')} 
+                    semester={this.props.match.params.semester.replace(/semester/g, '')}/>
             </Grid>
 
             </Grid>
