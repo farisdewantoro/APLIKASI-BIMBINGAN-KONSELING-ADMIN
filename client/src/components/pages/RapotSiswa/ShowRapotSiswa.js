@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { getRapotMurid } from '../../../actions/muridActions';
-import { createRapotMurid, getDataRapotMurid } from '../../../actions/rapotActions';
+import { createRapotMurid, getDataRapotMurid,importRapotMurid } from '../../../actions/rapotActions';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
@@ -11,7 +11,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import TableNilaiRapot from '../../table/TableNilaiRapot';
-
 const styles = theme => ({
     infoSiswa: {
         fontWeight: "bold",
@@ -88,7 +87,9 @@ class ShowRapotSiswa extends Component {
                 pelajaran: [
                     { mataPelajaran: '', nilai: '', predikat: '' }
                 ]
-            }
+            },
+            importOpen:false,
+            disabledImport:true
 
         }
     }
@@ -109,6 +110,7 @@ class ShowRapotSiswa extends Component {
                 ]
             }
         })
+
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.rapot.murid) {
@@ -129,9 +131,14 @@ class ShowRapotSiswa extends Component {
             }));
         }
         if (nextProps.rapot.rapot && nextProps.rapot.rapot !== null) {
+            this.setState({ disabledImport: false });
             this.setState({
                 rapot: nextProps.rapot.rapot
             })
+           if(nextProps.rapot.loadingImport == false){
+               this.setState({ importOpen: false });
+           }
+            
         }
 
     }
@@ -183,18 +190,27 @@ class ShowRapotSiswa extends Component {
     handlerSubmitRapot = () => {
         this.props.createRapotMurid(this.state.murid.nis, this.state.rapot, this.props.history);
     }
-
+    handlerImport = (value)=>{
+       this.props.importRapotMurid(value);
+       
+    }
+    handlerOpenImportDialog = ()=>{
+        this.setState({importOpen:true});
+    }
+    handlercloseImportDialog =()=>{
+        this.setState({importOpen:false});
+    }
 
     render() {
-        const { murid, rapot } = this.state;
-
+        const { murid, rapot, disabledImport } = this.state;
+        const { loadingImport, loading} = this.props.rapot;
         const { classes } = this.props;
- 
+    
         return (
             <Grid container spacing={8} direction="row">
             <Grid item xs={12}>
                     <Card>
-            
+                    
                         <CardContent>
                             <Grid container direction="column" spacing={24}>
                                 <Grid item>
@@ -248,7 +264,14 @@ class ShowRapotSiswa extends Component {
                     rapot={rapot} 
                     murid={murid} 
                     kelas={rapot.namaKelas + ' ' + this.props.match.params.kelas.replace(/kelas/g, '')} 
-                    semester={this.props.match.params.semester.replace(/semester/g, '')}/>
+                    semester={this.props.match.params.semester.replace(/semester/g, '')}
+                    loadingImport={loadingImport}
+                    loading={loading}
+                    importRapot={this.handlerImport}
+                    stateOpen={this.state.importOpen}
+                    disabledImport={disabledImport}
+                    openImportDialog={this.handlerOpenImportDialog} 
+                    closeImportDialog={this.handlercloseImportDialog}  />
             </Grid>
 
             </Grid>
@@ -261,7 +284,8 @@ ShowRapotSiswa.propTypes = {
     getRapotMurid: PropTypes.func.isRequired,
     rapot: PropTypes.object.isRequired,
     createRapotMurid: PropTypes.func.isRequired,
-    getDataRapotMurid: PropTypes.func.isRequired
+    getDataRapotMurid: PropTypes.func.isRequired,
+    importRapotMurid:PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) => ({
@@ -271,4 +295,4 @@ const mapStateToProps = (state) => ({
 export default
     compose(
         withStyles(styles, { name: "ShowRapotSiswa" }),
-        connect(mapStateToProps, { getRapotMurid, createRapotMurid, getDataRapotMurid }))(withRouter(ShowRapotSiswa));
+        connect(mapStateToProps, { getRapotMurid, createRapotMurid, getDataRapotMurid, importRapotMurid }))(withRouter(ShowRapotSiswa));

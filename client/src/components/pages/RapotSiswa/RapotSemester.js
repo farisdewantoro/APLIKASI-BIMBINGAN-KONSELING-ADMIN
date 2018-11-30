@@ -186,6 +186,7 @@ class RapotSemester extends Component {
 
     }
     handlerSubmitRapot = () =>{
+       
         this.props.createRapotMurid(this.state.murid.nis,this.state.rapot,this.props.history);
     }
     

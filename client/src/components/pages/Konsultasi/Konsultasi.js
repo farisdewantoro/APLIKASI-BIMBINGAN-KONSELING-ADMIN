@@ -165,46 +165,6 @@ const styles = (theme) =>({
       let formContainer; 
 
       
-    //   formContainer = (
-    //       <div>
-              
-    //           <Grid item xs={12}>
-    //               <Grid>
-    //                   <Grid container direction="column" alignItems="center" justify="center" spacing={8}>
-    //                       <Grid item >
-    //                           <Typography variant="subtitle1" style={{ fontWeight: "bold" }}>
-    //                               Anda mungkin harus memilih
-    //                              </Typography>
-    //                       </Grid>
-
-    //                       <Grid item className={classes.hasilJurusanHeading}>
-    //                           <Typography variant="h4" className={classes.hasilTextJurusanHeading}>
-    //                               {/* {hasilNamaJurusan.toString()} */}
-
-    //                           </Typography>
-    //                       </Grid>
-    //                   </Grid>
-
-
-    //                   <Grid container direction="column" alignItems="center" justify="center" style={{ paddingTop: 20, paddingBottom: 20 }}>
-    //                       <Grid item >
-    //                           <Typography variant="subtitle1" className={classes.petKeterampilan}>
-    //                               Peta Keterampilan
-    //                              </Typography>
-    //                       </Grid>
-
-    //                       <Grid item>
-    //                           {/* <HasilKonsultasi dataHasil={pertanyaan} /> */}
-    //                       </Grid>
-
-    //                   </Grid>
-
-    //               </Grid>
-    //           </Grid>
-
-    //       </div>
-
-    //   )
     
     if(loadingJurusan || loadingPertanyaan || loadingNextQuestion){
         loadingComponent=(

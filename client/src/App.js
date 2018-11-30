@@ -25,7 +25,7 @@ import CreatePertanyaan from './components/pages/Pertanyaan/CreatePertanyaan';
 import Jurusan from './components/pages/Jurusan/Jurusan';
 import CreateJurusan from './components/pages/Jurusan/CreateJurusan';
 import Konsultasi from './components/pages/Konsultasi/Konsultasi';
-
+import NilaiRapotPDF from './components/pdf/NilaiRapotPDF';
 
 // Check for token 
 if(localStorage.jwtToken){
@@ -54,14 +54,16 @@ class App extends Component {
       <Router>
       <Switch>
        <Route path="/login" component={Login} />  
+        <PrivateRoute path="/rapot/siswa/PDF" exact component={NilaiRapotPDF} />
         <MainLayout>
           <Switch>
+            
               <PrivateRoute path="/" exact component={Dashboard} />
               {/* <PrivateRoute path="/penjurusan" exact  component={Penjurusan} />
                 <PrivateRoute path="/penjurusan/create" exact component={PenjurusanCreate} /> */}
                 <PrivateRoute path="/datapenjurusansiswa" exact component={DataPenjurusanSiswa} />
                 <PrivateRoute path="/rapotsiswa" exact component={RapotSiswa}/> 
-              <PrivateRoute path="/profileadmin" exact component={ProfileAdmin}/> 
+                <PrivateRoute path="/profileadmin" exact component={ProfileAdmin}/> 
                 <PrivateRoute path="/datasiswa/create" exact component={DataSiswaCreate}/>
                 <PrivateRoute path="/rapotsiswa/:nis" exact component={Rapot}/>
                 <PrivateRoute path="/rapotsiswa/:nis/:kelas/:semester" exact component={RapotSemester}/>
@@ -73,8 +75,10 @@ class App extends Component {
                 <PrivateRoute path="/jurusan/create" exact component={CreateJurusan} />
                 <PrivateRoute path="/konsultasi" exact component={Konsultasi} />
                 <PrivateRoute path="/jurusan/edit/:_id" exact component={CreateJurusan}/>
+                
           </Switch>
         </MainLayout>
+        
       </Switch>
       </Router>
       </Provider>

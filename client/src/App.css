@@ -2,3 +2,87 @@
     background: #3f54f5;
     height: 100vh;
 }
+
+.tableInnerHTML table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.tableInnerHTML table th,
+.tableInnerHTML table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tableModify {
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.tableModify th,
+.tableModify td {
+    font-weight: normal;
+    padding: 8px 15px;
+    text-align: left;
+    vertical-align: middle;
+    border-top: 1px solid #dddddd;
+}
+
+.tableModify thead th {
+    background: #eeeeee;
+    vertical-align: bottom;
+}
+
+.tableModify tbody>tr:nth-child(odd)>td,
+.tableModify tbody>tr:nth-child(odd)>th {
+    background-color: #fafafa;
+}
+
+.tableModify .t-small {
+    width: 5%;
+}
+
+.tableModify .t-medium {
+    width: 15%;
+}
+
+.tableModify .t-status {
+    font-weight: bold;
+}
+
+.tableModify .t-active {
+    color: #46a546;
+}
+
+.tableModify .t-inactive {
+    color: #e00300;
+}
+
+.tableModify .t-draft {
+    color: #f89406;
+}
+
+.tableModify .t-scheduled {
+    color: #049cdb;
+}
+
+/* Small Sizes */
+
+@media (max-width: 480px) {
+    .tableModify-action thead {
+        display: none;
+    }
+    .tableModify-action tr {
+        border-bottom: 1px solid #dddddd;
+    }
+    .tableModify-action td {
+        border: 0;
+    }
+    .tableModify-action td:not(:first-child) {
+        display: block;
+    }
+}

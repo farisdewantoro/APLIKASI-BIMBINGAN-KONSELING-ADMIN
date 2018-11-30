@@ -23,6 +23,30 @@ router.post('/create',(req,res)=>{
 
 });
 
+router.post('/import',(req,res)=>{
+    Rapot.findOne({ murid: req.body.murid, kelas: req.body.kelas, semester: req.body.semester })
+    .then(rapot=>{
+        if (rapot !== null) {
+            //Update
+            Rapot.findOneAndUpdate({ murid: req.body.murid, kelas: req.body.kelas, semester: req.body.semester }, { $set: req.body })
+                .then(rapot =>{
+                    Rapot.findOne({ murid: req.body.murid, kelas: req.body.kelas, semester: req.body.semester })
+                        .then(r=>{
+                            res.json(r);
+                        })
+                   
+                });
+        } else {
+            new Rapot(req.body).save().then(rapot =>{
+                Rapot.findOne({ murid: req.body.murid, kelas: req.body.kelas, semester: req.body.semester })
+                    .then(r => {
+                        res.json(r);
+                    })
+            });
+        }
+    })
+})
+
 router.get('/show/:nis/:kelas/:semester',(req,res)=>{
 
     Murid.findOne({nis:req.params.nis})

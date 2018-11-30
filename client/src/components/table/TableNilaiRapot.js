@@ -14,9 +14,18 @@ import Paper from '@material-ui/core/Paper';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import {compose} from 'redux';
 import XLSX from 'xlsx';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import PrintIcon from '@material-ui/icons/Print';
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -120,6 +129,9 @@ const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
     },
+    input: {
+        display: 'none',
+    },
     ButtonExport:{
         margin: "10px 15px 10px 15px",
     },
@@ -144,16 +156,90 @@ class TableNilaiRapot extends React.Component {
                 'name':'tes',
                 'email':'tes'
             }
-        ]
+        ],
+        openImportDialog:false,
+        htmlTable:null,
+        newDataImport:null,
+    };
+    handleClose = () => {
+        this.setState({ openImportDialog: false });
     };
 
+    handleClickOpen = () => {
+        this.setState({ openImportDialog: true });
+    };
+
+    pdfPrint = (rapot, murid)=>{
+       
+        if(rapot.tahunPelajaran !== '' && murid.nis !== ''){
+            let data = {};
+            data["rapot"] = rapot;
+            data["murid"] = murid;
+            
+            localStorage.setItem("pdfDataPrint", JSON.stringify(data));
+            
+            window.open('/rapot/siswa/PDF', "_blank");
+        }
+    
+    }
+
+    onChangeFileUpload = (e) =>{
+        
+        var file = e.target.files[0];
+        var reader = new FileReader();
+     
+      
+        reader.onload = (e) =>{
+            var data = new Uint8Array(reader.result);
+          
+            var wb = XLSX.read(data,{type:'array'});
+            var first_sheet_name = wb.SheetNames[0];
+            var worksheet = wb.Sheets[first_sheet_name];
+            let json = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+            let pelajaran =[];
+            let htmlStr = XLSX.write(wb, { sheet: first_sheet_name,type:"binary",bookType:'html'},{
+                cellStyles: true
+            }); 
+            this.setState({htmlTable:htmlStr});
+         
+            if(json.length > 0){
+                json.forEach(j=>{
+                 
+                   pelajaran.push(
+                       {
+                           mataPelajaran:j["Mata Pelajaran"],
+                           nilai:j.Nilai,
+                           predikat:j.Predikat
+                        })
+                })
+                let rapot = this.props.rapot;
+                let keys = Object.keys(rapot);
+                let newData={};
+                keys.forEach(k=>{
+                    newData[k] = rapot[k];
+                });
+                delete newData["pelajaran"];
+                newData["pelajaran"] = pelajaran;
+                this.setState({ newDataImport:newData});
+            }
+        
+        }
+  
+        reader.readAsArrayBuffer(file);
+        
+        // this.setState({ htmlTable: htmlStr});
+        // this.setState({ htmlTable: htmlStr });
+       
+    }
+
+    
     exportFile=()=>{
       let murid = this.props.murid;
       let kelas = this.props.kelas;
       let semester = this.props.semester;
        let dataCsv = [
-        ['NIS','Nama','Tanggal Lahir'],[murid.nis,murid.nama,murid.tanggalLahir],
-        ['Kelas','Semester'],[kelas,semester],
+        // ['NIS','Nama','Tanggal Lahir'],[murid.nis,murid.nama,murid.tanggalLahir],
+        // ['Kelas','Semester'],[kelas,semester],
        ['No','Mata Pelajaran','Nilai','Predikat']];
        let nilaiRapot = this.props.rapot.pelajaran;
        nilaiRapot.forEach((n,index)=>{
@@ -162,9 +248,18 @@ class TableNilaiRapot extends React.Component {
         /* convert state to workbook */
         const ws = XLSX.utils.aoa_to_sheet(dataCsv);
         const wb = XLSX.utils.book_new();
+        var wscols = [
+            { wch: 5},
+            {wch:17},
+            {wch:8},
+            {wch:10}
+        ];
+   
+        ws['!cols'] = wscols;
         XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
         /* generate XLSX file and send to client */
-        XLSX.writeFile(wb, "sheetjs.xlsx")
+        XLSX.writeFile(wb, `Rapot_${murid.nis}_${kelas}_${semester}.xlsx`);
+     
     }
     handleRequestSort = (event, property) => {
         const orderBy = property;
@@ -176,6 +271,7 @@ class TableNilaiRapot extends React.Component {
 
         this.setState({ order, orderBy });
     };
+
 
     handleSelectAllClick = event => {
         if (event.target.checked) {
@@ -213,25 +309,47 @@ class TableNilaiRapot extends React.Component {
     handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value });
     };
+    handlerCancel =()=>{
+        this.setState({newDataImport:null});
+        this.setState({ htmlTable:null});
+        this.props.closeImportDialog();
+    }
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
-        const { classes } = this.props;
+        const { classes, fullScreen, loadingImport, loading, disabledImport } = this.props;
         const { order, orderBy, rowsPerPage, page } = this.state;
         let { rapot,murid } = this.props;
+       let htmlTable=  this.state.htmlTable;
+       let loadingBar;
         console.log(this.props);
-       
+        if (loadingImport == true || loading){
+            loadingBar =(
+                <LinearProgress color="secondary" variant="query" />
+            );
+        }
         if(rapot !== null && murid !== null ){
             const emptyRows = rowsPerPage - Math.min(rowsPerPage, rapot.pelajaran.length - page * rowsPerPage);
             return (
                 <div>
-                    
+                
                 <Paper className={classes.root}>
-                        <Button variant="contained" color="primary" onClick={this.exportFile} className={classes.ButtonExport}>
+                      {loadingBar}
+                        <Button variant="contained" disabled={loading || disabledImport}  color="primary" onClick={this.exportFile} className={classes.ButtonExport}>
                             Export 
                             <FileCopyIcon className={classes.fileCopyIcon}/>
                         </Button>
+
+                        <Button variant="contained" disabled={loading || disabledImport}  color="secondary" onClick={this.props.openImportDialog} className={classes.ButtonExport}>
+                            Import
+                            <InsertDriveFileIcon className={classes.fileCopyIcon} />
+                        </Button>
+                        <Button variant="contained" disabled={loading || disabledImport}  onClick={()=>this.pdfPrint(rapot,murid)} color="secondary"  className={classes.ButtonExport}>
+                            Print
+                            <PrintIcon className={classes.fileCopyIcon} />
+                        </Button>
+
                 <Toolbar>
                         <Typography color="inherit" variant="subtitle1">
                             Nilai Rapot
@@ -240,7 +358,7 @@ class TableNilaiRapot extends React.Component {
                 </Toolbar>
                 <Divider/>
                     <div className={classes.tableWrapper}>
-                        <Table className={classes.table} aria-labelledby="tableTitle">
+                        <Table className={classes.table} aria-labelledby="tableTitle" >
                             <EnhancedTableHead
 
                                 order={order}
@@ -254,7 +372,7 @@ class TableNilaiRapot extends React.Component {
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((n,index) => {
 
-                                            console.log(n);
+                                          
                                         return (
                                             <TableRow
                                                 hover
@@ -300,6 +418,50 @@ class TableNilaiRapot extends React.Component {
                         onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     />
                 </Paper>
+
+                    <Dialog
+                        fullScreen={fullScreen}
+                        open={this.props.stateOpen}
+                        onClose={this.props.closeImportDialog}
+                        aria-labelledby="responsive-dialog-title"
+                    >
+                        {loadingBar}
+                        <DialogTitle id="responsive-dialog-title">{"Import Nilai"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Seluruh data akan terganti dengan isi didalam file,isi field harus disesuaikan.
+                                untuk bisa melakukan import, file harus ber extensi csv,xlsx,xls bentuk Excel.
+                             </DialogContentText>
+
+                            <input
+                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
+                                className={classes.input}
+                                id="contained-button-file"
+                         
+                                type="file"
+                                onChange={this.onChangeFileUpload}
+                            />
+                            <label htmlFor="contained-button-file">
+                                <Button variant="contained" component="span" className={classes.button} >
+                                    Upload File
+                            <InsertDriveFileIcon className={classes.fileCopyIcon} />
+                                </Button>
+                            </label>
+
+                            <div className="tableInnerHTML" dangerouslySetInnerHTML={{ __html: htmlTable }}>
+
+                            </div>
+
+                        </DialogContent>
+                        <DialogActions>
+                            <Button color="primary" variant="contained" onClick={this.handlerCancel} disabled={loadingImport} color="primary">
+                                Cancel
+                            </Button>
+                            <Button disabled={loadingImport} color="primary" variant="contained" onClick={() => this.props.importRapot(this.state.newDataImport)} color="primary" autoFocus>
+                                Import
+            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </div>
             );
         } 
@@ -309,7 +471,9 @@ class TableNilaiRapot extends React.Component {
 
 TableNilaiRapot.propTypes = {
     classes: PropTypes.object.isRequired,
-    rapot:PropTypes.object.isRequired
+    rapot:PropTypes.object.isRequired,
+    fullScreen: PropTypes.bool.isRequired,
+
 };
 
-export default withStyles(styles)(TableNilaiRapot);
+export default compose(withStyles(styles), withMobileDialog())(TableNilaiRapot);
