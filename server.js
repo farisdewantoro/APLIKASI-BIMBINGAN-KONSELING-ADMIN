@@ -2,39 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-// const multer = require('multer');
-// const path = require('path');
-
-// // UPLOAD IMAGE
-
-// // Set Storage engine
-// const storage = multer.diskStorage({
-//     destination: './public/uploads/',
-//     filename: function (req, file, callback) {
-//         callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-//     }
-// });
-// // Init upload 
-// const upload = multer({
-//     storage: storage,
-//     limits:{fileSize:1000000}, //file size dalam bit
-// }).single('foto');
-
-// // Public folder
-// app.use(express.static('./public'));
-// app.post('/upload',(req,res)=>{
-//     upload(req,res,(err)=>{
-//         if(err){
-//             res.render('index',{
-//                 msg:err
-//             });
-//         }else{
-//             console.log(req.file);
-//             res.send('test');
-//         }
-//     });
-// });
-
+const path = require('path');
 // ROUTER
 const admins = require('./routes/api/admins');
 const murids = require('./routes/api/murids');
@@ -65,6 +33,16 @@ app.use('/api/admin', admins);
 app.use('/api/murids',murids);
 app.use('/api/rapots',rapots);
 app.use('/api/konsultasi',konsultasi);
+
+// Server static assets if in production
+if(process.env.NODE_ENV === 'production'){
+    // Set static folder
+    app.user(express.static('client/build'));
+    app.get('*',(req,res)=>{
+        res.sendFile(path.resolve(__dirname,'client','build','index.html'));
+    })
+}
+
 const port = process.env.PORT || 5050;
 
 app.listen(port, () => {
