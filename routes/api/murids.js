@@ -3,6 +3,8 @@ const router = express.Router();
 
 const multer = require('multer');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const keys = require('../../config/keys');
 
 // UPLOAD IMAGE
 
@@ -170,7 +172,8 @@ router.post('/login', (req, res) => {
                 errors.nis = 'NIS TIDAK TERDAFTAR';
                 return res.status(400).json(errors);
             }
-            if (murid.noTanggalLahir === noTanggalLahir) {
+ 
+            if (murid.noTanggalLahir.toString() === noTanggalLahir) {
                         // admin Matched
                         const payload = { id: murid._id, nis: murid.nis, noTanggalLahir: murid.noTanggalLahir }; // create jwt payload
 
@@ -188,7 +191,7 @@ router.post('/login', (req, res) => {
                             });
                   
                     } else {
-                        errors.password = 'Password incorrect'; return res.status(400).json(errors);
+                        errors.noTanggalLahir = 'No Tanggal Lahir Salah !'; return res.status(400).json(errors);
                     }
               
         });
