@@ -9,7 +9,7 @@ module.exports = function validateMuridInput(data){
     data.jenisKelamin = !isEmpty(data.jenisKelamin) ? data.jenisKelamin : '';
     data.nis = !isEmpty(data.nis) ? data.nis : '';
     data.tanggalLahir = !isEmpty(data.tanggalLahir) ? data.tanggalLahir : '';
-
+    
     if(!Validator.isLength(data.nis,{min:5,max:40})){
         errors.nis = 'NIS berisi antara 5 sampai 40 karakter';
     }

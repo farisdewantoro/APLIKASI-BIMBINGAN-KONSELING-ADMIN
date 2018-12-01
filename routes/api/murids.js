@@ -14,6 +14,7 @@ const storage = multer.diskStorage({
     }
 });
 
+
 // Init upload 
 let upload = multer({
     storage: storage,
@@ -90,6 +91,7 @@ router.put('/datasiswa/edit/:nis',(req,res) =>{
     if (req.body.nis) muridFields.nis = req.body.nis;
     if (req.body.nama) muridFields.nama = req.body.nama;
     if (req.body.tanggalLahir) muridFields.tanggalLahir = req.body.tanggalLahir;
+    if (req.body.noTanggalLahir) muridFields.noTanggalLahir = req.body.noTanggalLahir;
     if (req.body.namaAyah) muridFields.namaAyah = req.body.namaAyah;
     if (req.body.namaIbu) muridFields.namaIbu = req.body.namaIbu;
     if (req.body.noTelepon) muridFields.noTelepon = req.body.noTelepon;
@@ -121,6 +123,7 @@ router.post('/datasiswa/create', upload,(req,res)=>{
     if (request.nis) muridFields.nis = request.nis;
     if (request.nama) muridFields.nama = request.nama;
     if (request.tanggalLahir) muridFields.tanggalLahir = request.tanggalLahir;
+    if (request.noTanggalLahir) muridFields.noTanggalLahir = request.noTanggalLahir;
     if (request.namaAyah) muridFields.namaAyah = request.namaAyah;
     if (request.namaIbu) muridFields.namaIbu = request.namaIbu;
     if (request.noTelepon) muridFields.noTelepon = request.noTelepon;
@@ -149,8 +152,47 @@ router.post('/datasiswa/create', upload,(req,res)=>{
 
 });
 
+const validateLoginMuridInput = require('../../validations/loginMurid');
+router.post('/login', (req, res) => {
+    const { errors, isValid } = validateLoginMuridInput(req.body);
+    // Check validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    const nis = req.body.nis;
+    const noTanggalLahir = req.body.noTanggalLahir;
+    // find user by Email
+    Murid.findOne({ nis })
+        .then((murid) => {
+            // check for admins
+            if (!murid) {
+                errors.nis = 'NIS TIDAK TERDAFTAR';
+                return res.status(400).json(errors);
+            }
+            if (murid.noTanggalLahir === noTanggalLahir) {
+                        // admin Matched
+                        const payload = { id: murid._id, nis: murid.nis, noTanggalLahir: murid.noTanggalLahir }; // create jwt payload
 
 
+                        // Sign token
+                        jwt.sign(
+                            payload,
+                            keys.secretOrKey, {
+                                expiresIn: 3600
+                            }, (err, token) => {
+                                res.json({
+                                    success: true,
+                                    token: "Bearer " + token
+                                });
+                            });
+                  
+                    } else {
+                        errors.password = 'Password incorrect'; return res.status(400).json(errors);
+                    }
+              
+        });
+});
 // // @route buat edit/create murid baru
 // router.post('/datasiswa/create',(req, res,next) => {
 //     upload(req,res,(err)=>{

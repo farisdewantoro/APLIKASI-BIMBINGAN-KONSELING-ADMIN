@@ -22,7 +22,7 @@ import Button from '@material-ui/core/Button';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-
+import moment from 'moment';
 import {withRouter} from 'react-router-dom';
 import {createNewMurid} from '../../actions/muridActions';
 const styles = theme => ({
@@ -109,7 +109,10 @@ class DataSiswaCreate extends Component {
     }
 
     onSubmit = (e) =>{
-        e.preventDefault();
+          e.preventDefault();
+        const noTanggalLahir = moment(this.state.tanggalLahir).format("L").replace(/[/]/g, "");
+
+      
         const muridData = {
             tempatLahir:this.state.tempatLahir,
             jenisKelamin:this.state.jenisKelamin,
@@ -123,6 +126,7 @@ class DataSiswaCreate extends Component {
             hpIbu: this.state.hpIbu,
             hpAyah:this.state.hpAyah,
             alamat:this.state.alamat,
+            noTanggalLahir:noTanggalLahir
             
         }
         const foto =this.state.foto;
@@ -343,7 +347,7 @@ class DataSiswaCreate extends Component {
                                     <TextField
                                         id="datetime-local"
                                         label="Tanggal Lahir"
-                                        type="datetime-local"
+                                        type="date"
                                         margin="normal"
                                         name="tanggalLahir"
                                             error={errors.tanggalLahir !== undefined}

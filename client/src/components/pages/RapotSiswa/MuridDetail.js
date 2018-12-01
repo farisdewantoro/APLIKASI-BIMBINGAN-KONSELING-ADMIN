@@ -21,7 +21,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
-
+import moment from 'moment';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
 const styles = theme => ({
@@ -87,7 +87,7 @@ function MuridDetail(props) {
           </div>
             <div className={classes.column}>
                       <Typography className={classes.heading}> <strong>TANGGAL LAHIR</strong> </Typography>
-            <Typography className={classes.heading}>{murid.tanggalLahir}</Typography>
+                      <Typography className={classes.heading}>{moment(murid.tanggalLahir).format("LL")}</Typography>
           </div>
         </ExpansionPanelSummary>
               <Divider />
@@ -231,20 +231,20 @@ function MuridDetail(props) {
                                               </MenuItem>
                                         
                                       </Select>
-                                      <FormHelperText error>err</FormHelperText >
+                                    
 
                                   </FormControl>
 
                                   <TextField
                                       id="datetime-local"
                                       label="Tanggal Lahir"
-                                      type="datetime-local"
+                                      type="date"
                                       margin="normal"
                                       name="tanggalLahir"
                               onChange={props.onChange}
-                              value={murid.tanggalLahir}
+                                 value={murid.tanggalLahir}
                                       fullWidth
-                                  
+                                          
                                       style={{ margin: 10 }}
                                       className={classes.textField}
                                       InputLabelProps={{

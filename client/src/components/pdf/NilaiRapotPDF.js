@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -91,7 +92,7 @@ const styles = theme => ({
                                             Tanggal Lahir
                                     </Typography>
                                         <Typography variant="subheading">
-                                            : {murid.tanggalLahir}
+                                            : {moment(murid.tanggalLahir).format("LL")}
                                         </Typography>
                                     </Grid>
                                 </Grid>

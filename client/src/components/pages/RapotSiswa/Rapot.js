@@ -17,7 +17,7 @@ import { withRouter } from 'react-router-dom';
 import NilaiRapot from './NilaiRapot';
 import DataNilaiRapot from './DataNilaiRapot';
 import Typography from '@material-ui/core/Typography';
-
+import moment from 'moment';
 class Rapot extends Component {
     constructor(props) {
         super(props);
@@ -28,13 +28,14 @@ class Rapot extends Component {
                 nis: '',
                 nama: '',
                 tanggalLahir: '',
+                noTanggalLahir:'',
                 namaAyah: '',
                 namaIbu: '',
                 noTelepon: '',
                 hpSiswa: '',
                 hpIbu: '',
                 hpAyah: '',
-                alamat: ''
+                alamat: '',
             },
             open:false,
             confirmDelete: '',
@@ -63,7 +64,8 @@ class Rapot extends Component {
                     hpSiswa: murid.hpSiswa,
                     hpIbu: murid.hpIbu,
                     hpAyah: murid.hpAyah,
-                    alamat: murid.alamat
+                    alamat: murid.alamat,
+                    noTanggalLahir:moment(murid.tanggalLahir).format("L").replace(/[/]/g,"")
                 },
               
             });
@@ -120,7 +122,7 @@ class Rapot extends Component {
     render() {
         const {murid,errors,expanded} = this.state;
         const dataMurid = this.props.rapot.murid;
-        console.log(this.props);
+       
         let rapotSiswa;
         let dataRapotSiswa;
         if (dataMurid !== null ){

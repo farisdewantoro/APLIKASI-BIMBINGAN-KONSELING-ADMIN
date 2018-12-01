@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import TableNilaiRapot from '../../table/TableNilaiRapot';
+import moment from 'moment';
 const styles = theme => ({
     infoSiswa: {
         fontWeight: "bold",
@@ -228,7 +229,7 @@ class ShowRapotSiswa extends Component {
                                         </Grid>
                                         <Grid item>
                                             <Typography variant="subtitle1" className={classes.infoSiswa}>
-                                                TANGGAL LAHIR : {murid.tanggalLahir}
+                                                TANGGAL LAHIR : {moment(murid.tanggalLahir).format("LL")}
                                             </Typography>
                                         </Grid>
                                     </Grid>

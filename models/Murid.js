@@ -11,6 +11,7 @@ const MuridSchema = new Schema({
         type:String,
         required:true
     },
+    
     namaAyah:{
         type:String,
     },
@@ -31,6 +32,10 @@ const MuridSchema = new Schema({
     },
     tempatLahir:{
         type:String,
+        required:true
+    },
+    noTanggalLahir:{
+        type:Number,
         required:true
     },
     tanggalLahir:{

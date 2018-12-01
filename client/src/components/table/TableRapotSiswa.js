@@ -20,7 +20,8 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import Button from '@material-ui/core/Button';
 import BuildIcon from '@material-ui/icons/Build';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import moment from 'moment';
 let counter = 0;
 function createData(name, calories, fat, carbs, protein) {
     counter += 1;
@@ -321,7 +322,7 @@ class EnhancedTable extends React.Component {
                                             </TableCell>
                                     
                                             <TableCell numeric>{n.nama}</TableCell>
-                                            <TableCell numeric>{n.tanggalLahir}</TableCell>
+                                            <TableCell numeric>{moment(n.tanggalLahir).format("LL")}</TableCell>
                                             <TableCell numeric>{n.jenisKelamin}</TableCell>
                                             <TableCell numeric>           
                                                 <Button aria-label="Edit" component={Link} to={`rapotsiswa/${n.nis}`}>
