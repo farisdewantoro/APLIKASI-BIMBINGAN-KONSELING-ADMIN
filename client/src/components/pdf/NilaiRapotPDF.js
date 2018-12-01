@@ -37,7 +37,7 @@ const styles = theme => ({
              let dataFromLocal = JSON.parse(localStorage.getItem("pdfDataPrint"));
              this.setState({rapot:dataFromLocal["rapot"]});
              this.setState({murid:dataFromLocal["murid"]});
-            //  localStorage.removeItem("pdfDataPrint");
+             localStorage.removeItem("pdfDataPrint");
          }
         //  let dataFromLocal = JSON.parse(localStorage.pdfDataPrint);
         
