@@ -8,6 +8,7 @@ const admins = require('./routes/api/admins');
 const murids = require('./routes/api/murids');
 const rapots = require('./routes/api/rapots');
 const konsultasi = require('./routes/api/konsultasi');
+const jawabans = require('./routes/api/jawabans');
 const app = express();
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -38,6 +39,7 @@ app.use('/api/admin', admins);
 app.use('/api/murids',murids);
 app.use('/api/rapots',rapots);
 app.use('/api/konsultasi',konsultasi);
+app.use('/api/jawabans', jawabans);
 
 // Server static assets if in production
 if(process.env.NODE_ENV === 'production'){

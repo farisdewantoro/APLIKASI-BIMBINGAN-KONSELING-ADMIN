@@ -6,6 +6,7 @@ import rapotReducer from './rapotReducer';
 import pertanyaanReducer from './pertanyaanReducer';
 import jurusanReducer from './jurusanReducer';
 import konsultasiReducer from './konsultasiReducer';
+import jawabanReducer from './jawabanReducer';
 export default combineReducers({
     auth:authReducer,
     errors: errorReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
     rapot:rapotReducer,
     pertanyaan:pertanyaanReducer,
     jurusan:jurusanReducer,
-    konsultasi:konsultasiReducer
+    konsultasi:konsultasiReducer,
+    jawaban: jawabanReducer
 });

@@ -7,6 +7,20 @@ const Jawaban = require('../../models/Jawaban');
 const Jurusan = require('../../models/Jurusan');
 const Pertanyaan = require('../../models/Pertanyaan');
 
+router.post('/hasil/submit', (req, res) => {
+    Jawaban.findOne({murid:req.body.murid})
+        .then(jawaban => {
+            if (jawaban) {
+                Jawaban.replaceOne({murid:req.body.murid},req.body,{new:true})
+                    .then(jaw=>{
+                        res.json(jaw);
+                    })
+            }else{
+                return new Jawaban(req.body).save().then(jawaban => res.json(jawaban));
+            }
+
+        })
+})
 
 router.post('/jawaban/konsul',(req,res)=>{
 
@@ -81,6 +95,8 @@ router.post('/jawaban/konsul',(req,res)=>{
 
                                                     }
                                                 })
+
+                                                hasil["percentase"] = hasil["dataMatched"]/hasil["maxLength"] * 100;
                                             })
                                         })
                                         res.json(hasilAkhir.sort((a, b) =>
@@ -110,6 +126,7 @@ router.post('/jawaban/konsul',(req,res)=>{
 
                                         }
                                     })
+                                    hasil["percentase"] = hasil["dataMatched"] / hasil["maxLength"] * 100;
                                 })
                             })
 
@@ -145,6 +162,7 @@ router.post('/jawaban/konsul',(req,res)=>{
                                    
                                     }
                                 })
+                                hasil["percentase"] = hasil["dataMatched"] / hasil["maxLength"] * 100;
                             })
                         })
 

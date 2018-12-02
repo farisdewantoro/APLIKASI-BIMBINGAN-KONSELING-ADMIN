@@ -9,12 +9,13 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import {getAllJurusan} from '../../../actions/jurusanActions';
 import {getAllPertanyaan} from '../../../actions/pertanyaanActions';
-import { getQuestionKonsultasi} from '../../../actions/konsultasiAction';
+import { getQuestionKonsultasi, saveHasilKonsultasi} from '../../../actions/konsultasiAction';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import {compose} from 'redux';
 import Divider from '@material-ui/core/Divider';
 import HasilKonsultasi from '../../chart/HasilKonsultasi';
+import ResetIcon from '@material-ui/icons/Cached';
 const styles = (theme) =>({
     headingSoal:{
         fontWeight:600,
@@ -35,6 +36,30 @@ const styles = (theme) =>({
         color:"#545251aa",
         fontWeight:"bold",
 
+    },
+    formJudulMulai: {
+        backgroundColor: "#3f51b5",
+        borderRadius: "5px",
+        padding: 20
+    },
+    formJudulMulaiText: {
+        color: "#fff",
+        textAlign: "center",
+        fontWeight: "bold"
+    },
+    subTitle: {
+        textAlign: "center",
+        paddingTop: 20,
+        paddingBottom: 20
+    },
+    buttonStart: {
+        marginLeft: "auto",
+        marginRight: "auto",
+        display: "block",
+        fontSize: "20px"
+    },
+    icon: {
+        marginRight: theme.spacing.unit
     }
 });
 
@@ -53,7 +78,8 @@ const styles = (theme) =>({
              randomNamaJurusan:'',
              listNamaJurusan:[],
              waktuAwal:null,
-             indexJurusan:0
+             indexJurusan:0,
+             originalJawaban:[]
          }
      }
 
@@ -61,7 +87,7 @@ const styles = (theme) =>({
          this.props.getAllJurusan();
          this.props.getAllPertanyaan();
       
-        this.interval = setInterval(this.generateJurusan,100);
+        this.interval = setInterval(this.generateJurusan,85);
     
      }
      generateJurusan=()=>{
@@ -131,6 +157,24 @@ const styles = (theme) =>({
      handlerStartQuestion = () =>{
          this.setState({startQuestion:!this.state.startQuestion});
      }
+     handlerReset = () => {
+         window.location.href = "/konsultasi";
+     }
+
+     handlerSaveHasil = () =>{
+         let hasilJawaban = this.state.originalJawaban;
+         let jurusan = this.state.pertanyaan;
+         let murid = "5be6eba79ad77a32c40eee64";
+
+         let hasilAkhir={
+             hasilJawaban: hasilJawaban,
+             jurusan:jurusan,
+             murid:murid
+         }
+         
+         this.props.saveHasilKonsultasi(hasilAkhir);
+        
+     }
 
      submitAnswer = (kodeSoal,kodeJawaban) =>{
          let {hasilJawaban} = this.state;
@@ -140,6 +184,10 @@ const styles = (theme) =>({
                  $elemMatch: { kodeSoal: kodeSoal, kodeJawaban: kodeJawaban }
              }
          }]);
+         
+         this.setState({ originalJawaban:this.state.originalJawaban.concat([{
+             kodeSoal:kodeSoal,kodeJawaban:kodeJawaban
+         }])});
 
          this.setState({ hasilJawaban: hasilJawaban.concat([{rule:{
              $elemMatch: { kodeSoal: kodeSoal, kodeJawaban: kodeJawaban }
@@ -172,25 +220,42 @@ const styles = (theme) =>({
         )
     }
 
-        if(nis === '' || startQuestion === false || pertanyaan === null){
+        if(startQuestion === false || pertanyaan === null){
             formContainer=(
                 <div>
                     <Grid container direction="column" spacing={16}>
-                        <Grid item>
-                            <TextField fullWidth label="NIS" value={nis} onChange={this.handlerNisChange} InputLabelProps={{
-                                shrink: true,
-                            }} />
-                        </Grid>
 
-                        <Grid item>
-                            <Button variant="contained" disabled={loadingJurusan || loadingPertanyaan} onClick={this.handlerStartQuestion}>
+                        <div className={classes.formJudulMulai}>
+                            <Typography variant="h4" className={classes.formJudulMulaiText}>
+                                Jurusan mana yang seharusnya Saya ambil?
+                            </Typography>
+                        </div>
+
+                        <div>
+                            <Typography className={classes.subTitle} variant="h6">
+                                a.k.a Jurusan mana yang seharusnya Saya pilih?
+                        </Typography>
+
+                            <Typography variant="subtitle1" style={{ margin: "0px 50px 0px 50px" }}>
+                                Pilih jawaban untuk setiap pertanyaan. Ada kemungkinan bahwa lebih dari satu jawaban yang cocok untuk Anda, tapi pilihlah yang lebih Anda sukai.
+                        </Typography>
+
+                            <Typography variant="subtitle1" style={{ margin: "20px 50px 20px 50px" }}>
+                                Tes ini akan menilai jurusan mana yang terbaik dan tercocok untuk Anda dan menawarkan dan menyarankan beberapa universitas buat Anda tentang jurusan itu.
+                        </Typography>
+                        </div>
+
+                        <div>
+                            <Button color="secondary" className={classes.buttonStart} variant="contained" disabled={loadingJurusan || loadingPertanyaan} onClick={this.handlerStartQuestion}>
                                 MULAI TEST
                         </Button>
-                        </Grid>
-                    
-                    
+                        </div>
+
+        
+
+
                     </Grid>
-                  
+
                 </div>
                 
             )
@@ -264,6 +329,18 @@ const styles = (theme) =>({
                                     </Grid>
 
                                 </Grid>
+                            <Grid container >
+                          
+                                <Button variant="contained" color="primary" style={{ margin: 10 }} onClick={this.handlerReset}>
+                                    <ResetIcon className={classes.icon} />  Reset
+                                </Button>
+
+                                {/* <Button variant="contained" color="primary" style={{ margin: 10 }} onClick={this.handlerSaveHasil}>
+                                   Save
+                                </Button> */}
+
+
+                            </Grid>
 
                             </Grid>
                         </Grid>
@@ -318,4 +395,4 @@ const mapStateToProps = (state)=>({
 });
 
 
-export default compose(withStyles(styles, { name:"Konsultasi"}),connect(mapStateToProps, { getAllPertanyaan, getAllJurusan, getQuestionKonsultasi}))(Konsultasi);
+export default compose(withStyles(styles, { name: "Konsultasi" }), connect(mapStateToProps, { getAllPertanyaan, getAllJurusan, getQuestionKonsultasi, saveHasilKonsultasi}))(Konsultasi);

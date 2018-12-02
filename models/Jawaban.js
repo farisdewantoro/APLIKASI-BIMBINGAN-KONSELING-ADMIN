@@ -4,18 +4,17 @@ const Schema = mongoose.Schema;
 const JawabanSchema = new Schema({
     murid:{
         type:Schema.Types.ObjectId,
-        refs:'murids'
+        ref:'Murid'
     },
-    hasil:[{
-        kodeSoal:{
-            type:String,
-            required:true,
-        },
-        kodeJawaban:{
-            type:String,
-            required:true,
-        }
-    }]
+    hasilJawaban:{
+        type:Array,
+        default:[]
+    },
+    jurusan:{
+        type:Array,
+        default:[]
+    }
+    
 });
 
 module.exports = Jawaban = mongoose.model('Jawaban',JawabanSchema);

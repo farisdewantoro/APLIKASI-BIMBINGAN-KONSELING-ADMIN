@@ -33,7 +33,7 @@ const data = [
     
     return (
       <div>
-        <RadarChart cx={300} cy={200} outerRadius={150} width={600} height={500} data={this.fetchData()}>
+        <RadarChart cx={300} cy={200} outerRadius={150} width={600} height={300} data={this.fetchData()}>
                 <PolarGrid />
                 <PolarAngleAxis dataKey="subject" />
               

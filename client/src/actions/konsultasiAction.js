@@ -18,6 +18,17 @@ export const getQuestionKonsultasi = (jawabanUser) =>disbatch=>{
 }
 
 
+export const saveHasilKonsultasi = (hasilAkhir) => disbatch =>{
+    axios.post('/api/konsultasi/hasil/submit', hasilAkhir)
+        .then(res=>{
+            console.log(res);
+        })
+        .catch(err=>{
+            console.log(err.response.data);
+        })
+}
+
+
 export const loadingKonsultasi = () =>{
     return{
         type:LOADING_NEXT_QUESTION_KONSULTASI

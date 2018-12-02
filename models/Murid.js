@@ -51,8 +51,7 @@ const MuridSchema = new Schema({
     },
     foto:{
         type:String
-    },
-
+    }
 
 });
 const Rapot = require('./Rapot');

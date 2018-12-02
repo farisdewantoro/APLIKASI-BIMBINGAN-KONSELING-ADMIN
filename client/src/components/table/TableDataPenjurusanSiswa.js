@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -9,22 +9,15 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
+
 import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import { lighten } from '@material-ui/core/styles/colorManipulator';
 
-let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
-  counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
-}
-
+import {connect} from 'react-redux';
+import {compose} from 'redux';
+import moment from 'moment';
+import LinearProgress from '@material-ui/core/LinearProgress';
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -50,12 +43,12 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
-  { id: 'no', numeric: false, disablePadding: true, label: 'No Induk' },
-  { id: 'nama', numeric: true, disablePadding: false, label: 'Nama Siswa' },
-  { id: 'kelas', numeric: true, disablePadding: false, label: 'Kelas' },
-  { id: 'angkatan', numeric: true, disablePadding: false, label: 'Angkatan' },
-  { id: 'jurusan', numeric: true, disablePadding: false, label: 'Jurusan' },
-  { id: 'persentase', numeric: true, disablePadding: false, label: 'Persentase' },
+  { id: 'no', numeric: false, disablePadding: false, label: 'No Induk Siswa' },
+  { id: 'nama', numeric: false, disablePadding: false, label: 'Nama Siswa' },
+  { id: 'jenisKelamin', numeric: true, disablePadding: false, label: 'Jenis Kelamin' },
+  { id: 'tanggalLahir', numeric: true, disablePadding: false, label: 'Tanggal Lahir' },
+  { id: 'namaJurusan', numeric: true, disablePadding: false, label: 'Jurusan' },
+  { id: 'percentase', numeric: true, disablePadding: false, label: 'Persentase' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -64,18 +57,12 @@ class EnhancedTableHead extends React.Component {
   };
 
   render() {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+    const {  order, orderBy, rowCount } = this.props;
 
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
-            <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={numSelected === rowCount}
-              onChange={onSelectAllClick}
-            />
-          </TableCell>
+       
           {rows.map(row => {
             return (
               <TableCell
@@ -107,85 +94,14 @@ class EnhancedTableHead extends React.Component {
 }
 
 EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.string.isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
 
-const toolbarStyles = theme => ({
-  root: {
-    paddingRight: theme.spacing.unit,
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  spacer: {
-    flex: '1 1 100%',
-  },
-  actions: {
-    color: theme.palette.text.secondary,
-  },
-  title: {
-    flex: '0 0 auto',
-  },
-});
 
-let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
 
-  return (
-    <Toolbar
-      className={classNames(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      <div className={classes.title}>
-        {numSelected > 0 ? (
-          <Typography color="inherit" variant="subtitle1">
-            {numSelected} selected
-          </Typography>
-        ) : (
-          <Typography variant="h6" id="tableTitle">
-            Data Penjurusan Siswa
-          </Typography>
-        )}
-      </div>
-      <div className={classes.spacer} />
-      <div className={classes.actions}>
-        {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="Filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-      </div>
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-};
-
-EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
   root: {
@@ -205,22 +121,36 @@ class EnhancedTable extends React.Component {
     order: 'asc',
     orderBy: 'calories',
     selected: [],
-    data: [
-      createData('152015042', 'Faris','IPA 8','2018', 'Teknik Informatika','80%'),
-      createData('152015022', 'Udin', 'IPA 7', '2018', 'Teknik Informatika','70%'),
-      createData('152015032', 'Rifqi', 'IPA 6', '2018', 'Teknik Informatika','60%'),
-      createData('152015012', 'Reza', 'IPA 5', '2018', 'Teknik Informatika', '90%'),
-      createData('152015012', 'Dewi', 'IPA 4', '2018', 'Teknik Informatika', '60%'),
-      createData('152015010', 'Asep', 'IPA 3', '2018', 'Teknik Informatika','70%'),
-      createData('152015009', 'Cecep', 'IPA 2', '2018', 'Teknik Informatika', '70%'),
-      createData('152015008', 'Uhi', 'IPA 1', '2018', 'Teknik Informatika','78%'),
-
-
-    ],
+    data: [],
     page: 0,
     rowsPerPage: 5,
+    jawaban:null
   };
-
+  componentWillReceiveProps(nextProps){
+    let jawaban = nextProps.jawaban;
+    let data =[];
+    
+    if (jawaban !== null){
+   
+      this.setState({jawaban:nextProps.jawaban});
+      jawaban.forEach(jwb=>{
+     
+        jwb.jurusan.forEach(jur=>{
+            data.push(
+              {
+                nis:jwb.murid.nis,
+                nama:jwb.murid.nama,
+                jenisKelamin:jwb.murid.jenisKelamin,
+                tanggalLahir:jwb.murid.tanggalLahir,
+                namaJurusan:jur.namaJurusan,
+                percentase:jur.percentase
+              })
+        })
+      })
+      this.setState({data:data});
+     console.log(data);
+    }
+  }
   handleRequestSort = (event, property) => {
     const orderBy = property;
     let order = 'desc';
@@ -269,51 +199,58 @@ class EnhancedTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
+
 
   render() {
-    const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { classes,loading } = this.props;
+    const { data, order, orderBy, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
-
+    const {jawaban} = this.state;
+    // console.log(jawaban);
+    let loadingComponent;
+    if (loading) {
+      loadingComponent = (
+        <LinearProgress color="secondary" variant="query" />
+      )
+    }
     return (
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        {loadingComponent}
+        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead
-              numSelected={selected.length}
+           
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={this.handleSelectAllClick}
               onRequestSort={this.handleRequestSort}
               rowCount={data.length}
             />
             <TableBody>
               {stableSort(data, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(n => {
-                  const isSelected = this.isSelected(n.id);
+                .map((n,i) => {
+               
                   return (
                     <TableRow
                       hover
                       onClick={event => this.handleClick(event, n.id)}
                       role="checkbox"
-                      aria-checked={isSelected}
+                     
                       tabIndex={-1}
-                      key={n.id}
-                      selected={isSelected}
+                      key={i}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox checked={isSelected} />
-                      </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
+                
+                      {/* <TableCell component="th" scope="row" padding="none">
                         {n.name}
-                      </TableCell>
-                      <TableCell numeric>{n.calories}</TableCell>
-                      <TableCell numeric>{n.fat}</TableCell>
-                      <TableCell numeric>{n.carbs}</TableCell>
-                      <TableCell numeric>{n.protein}</TableCell>
+                      </TableCell> */}
+                      <TableCell >{n.nis}</TableCell>
+                      <TableCell >{n.nama}</TableCell>
+                      <TableCell numeric>{n.jenisKelamin}</TableCell>
+                      <TableCell numeric>{moment(n.tanggalLahir).format("L")}</TableCell>
+                      <TableCell numeric>{n.namaJurusan}</TableCell>
+                      <TableCell numeric>{Math.round(n.percentase)+'%'}</TableCell>
+                 
                     </TableRow>
                   );
                 })}
@@ -348,4 +285,4 @@ EnhancedTable.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(EnhancedTable);
+export default compose(withStyles(styles, { name: "EnhancedTable" }),connect(null))(EnhancedTable);
