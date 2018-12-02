@@ -175,7 +175,7 @@ router.post('/login', (req, res) => {
  
             if (murid.noTanggalLahir.toString() === noTanggalLahir) {
                         // admin Matched
-                        const payload = { id: murid._id, nis: murid.nis, noTanggalLahir: murid.noTanggalLahir }; // create jwt payload
+                        const payload = murid;// create jwt payload
 
 
                         // Sign token

@@ -19,8 +19,6 @@ router.post('/create',(req,res)=>{
                 new Rapot(req.body).save().then(rapot => res.json(rapot));
             }
         })
-   
-
 });
 
 router.post('/import',(req,res)=>{
@@ -46,6 +44,20 @@ router.post('/import',(req,res)=>{
         }
     })
 })
+
+router.get('/get/:_id',(req,res)=>{
+    Rapot.findOne({murid:req.params._id})
+        .then(rapot=>{
+            if(rapot){
+                res.json(rapot);
+            }else{
+                res.status(404).json({message:"NO DATA"});
+            }  
+        })
+        .catch(err=>{
+            res.status(404).json({message:"ID TIDAK TERDAFTAR"});
+        })
+});
 
 router.get('/show/:nis/:kelas/:semester',(req,res)=>{
 
