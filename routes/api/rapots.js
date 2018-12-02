@@ -46,7 +46,7 @@ router.post('/import',(req,res)=>{
 })
 
 router.get('/get/:_id',(req,res)=>{
-    Rapot.findOne({murid:req.params._id})
+    Rapot.find({murid:req.params._id})
         .then(rapot=>{
             if(rapot){
                 res.json(rapot);
