@@ -7,10 +7,10 @@ module.exports = function validateLoginMuridInput(data) {
     data.noTanggalLahir = !isEmpty(data.noTanggalLahir) ? data.noTanggalLahir : '';
 
     if (Validator.isEmpty(data.nis)) {
-        errors.nis = 'nis Field is required';
+        errors.nis = 'NIS Field is required';
     }
     if (Validator.isEmpty(data.noTanggalLahir)) {
-        errors.noTanggalLahir = 'noTanggalLahir Field is required';
+        errors.noTanggalLahir = 'No Tanggal Lahir Field is required';
     }
 
     return {
