@@ -35,7 +35,7 @@ const MuridSchema = new Schema({
         required:true
     },
     noTanggalLahir:{
-        type:Number,
+        type:String,
         required:true
     },
     tanggalLahir:{

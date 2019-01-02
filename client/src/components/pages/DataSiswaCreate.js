@@ -111,8 +111,8 @@ class DataSiswaCreate extends Component {
     onSubmit = (e) =>{
           e.preventDefault();
         const noTanggalLahir = moment(this.state.tanggalLahir).format("L").replace(/[/]/g, "");
-
-      
+ 
+        
         const muridData = {
             tempatLahir:this.state.tempatLahir,
             jenisKelamin:this.state.jenisKelamin,

@@ -175,7 +175,7 @@ router.post('/login', (req, res) => {
                 return res.status(400).json(errors);
             }
  
-            if (murid.noTanggalLahir.toString() === noTanggalLahir) {
+            if (murid.noTanggalLahir === noTanggalLahir) {
                         // admin Matched
                         const payload = {murid};// create jwt payload
                             
