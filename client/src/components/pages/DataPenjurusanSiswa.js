@@ -31,11 +31,14 @@ class DataPenjurusanSiswa extends Component {
                 </div>
             ) 
         }else{
-            <div>
-                <p>
-                    NO DATA
+            return(
+                <div>
+                    <p>
+                        NO DATA
                 </p>
-            </div>
+                </div>
+            )
+         
         }
     
     }
