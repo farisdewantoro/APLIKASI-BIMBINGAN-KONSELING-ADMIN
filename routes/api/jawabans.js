@@ -20,6 +20,26 @@ router.get('/get/all',(req,res)=>{
         })
 })
 
+router.get('/get/:id',(req,res)=>{
+    Jawaban.findOne({murid:req.params.id}).sort({ create_at: 'desc' })
+        .then(jawaban=>{
+            res.status(200).json(jawaban);
+        })
+        .catch(err=>{
+            res.status(500).json(err);
+        })
+})
+
+
+router.delete('/reset/:id',(req,res)=>{
+    Jawaban.findOneAndDelete({murid:req.params.id})
+        .then(jawaban=>{
+            res.status(200).json(jawaban);
+        })
+        .catch(err=>{
+            res.status(500).json(err)
+        });
+})
 
 
 module.exports = router;

@@ -139,13 +139,22 @@ class ListJurusan extends React.Component {
                                         <Typography>
                                             Deskripsi
                                         </Typography>
-                                        <Divider/>
-                                        <Typography>
+                                        <Divider style={{margin:'5px 0px 5px 0px'}}/>
+                                        <div dangerouslySetInnerHTML={{
+                                            __html: jurusan.deskripsi
+                                        }}>
+
+                                        </div>
+                                        {/* <Typography>
                                             {jurusan.deskripsi}
-                                        </Typography>
+                                        </Typography> */}
                                     </Grid>
 
                                     <Grid item xs={12}>
+                                        <Typography>
+                                           Rule
+                                        </Typography>
+                                        <Divider style={{ margin: '5px 0px 5px 0px' }} />
                                         <Grid container direction="column">
                                             {jurusan.rule.map((rule, i) => {
                                                 return (

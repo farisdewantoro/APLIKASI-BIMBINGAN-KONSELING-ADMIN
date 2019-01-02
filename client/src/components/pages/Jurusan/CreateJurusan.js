@@ -18,6 +18,7 @@ import { setNewJurusan, getJurusan } from '../../../actions/jurusanActions';
 import CardActions from '@material-ui/core/CardActions';
 import SaveIcon from '@material-ui/icons/Save';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import CKEditor from '../../plugins/ckeditor';
 const styles = theme => ({
     button: {
         margin: theme.spacing.unit,
@@ -69,6 +70,7 @@ const styles = theme => ({
         this.setState({pertanyaan:nextProps.pertanyaan.pertanyaan});
          let pertanyaan= nextProps.pertanyaan.pertanyaan;
          let jurusan = nextProps.jurusan.jurusans;
+     
          if(pertanyaan !== null){
              const soal=[];
              const jawaban=[]; 
@@ -84,7 +86,7 @@ const styles = theme => ({
 
          if ('namaJurusan' in jurusan && this.props.match.params._id){
              this.setState({ namaJurusan: jurusan.namaJurusan });
-             this.setState({deskripsi:jurusan.deskripsi});
+             this.setState({ deskripsi: jurusan.deskripsi});
              this.setState({rule:jurusan.rule});
          }
  
@@ -214,7 +216,17 @@ const styles = theme => ({
          this.props.setNewJurusan(dataJurusan,this.props.history);
      }
  
-        
+     onChangedCKeditor = (e) => {
+        //  this.setState(prevState => ({
+        //      product: {
+        //          ...prevState.product,
+        //          description: e
+        //      }
+        //  }))
+         this.setState({
+             deskripsi:e
+         })
+     }
 
   render() {
       const { classes } = this.props;
@@ -222,7 +234,7 @@ const styles = theme => ({
       const { soal, rule, namaJurusan,deskripsi,pertanyaan} = this.state;
       let progressBar;
       let formRule;
-      
+        console.log(deskripsi);
       if (!loading && soal !== null && pertanyaan !== null){
           formRule=(
              rule.map((r,i)=>{
@@ -280,7 +292,7 @@ const styles = theme => ({
                                 }} />
                 </Grid>
                         <Grid item>
-                            <TextField
+                            {/* <TextField
                                 id="filled-full-width"
                                 label="Deskripsi"
                                 name="deskripsi"
@@ -295,7 +307,8 @@ const styles = theme => ({
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                            />
+                            /> */}
+                            <CKEditor name="editorFinallyProduct" value={deskripsi} onChange={this.onChangedCKeditor} />
                         </Grid>
                     <Divider/>
                     <Grid item>
