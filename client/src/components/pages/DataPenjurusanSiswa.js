@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from 'react-redux';
 import { getAllJawaban} from '../../actions/jawabanActions';
+
 const styles = theme => ({ 
     NoteIcon: {
         marginRight: theme.spacing.unit
@@ -18,17 +19,25 @@ class DataPenjurusanSiswa extends Component {
     }
     render() {
         let {jawaban,loading} = this.props.jawaban;
-      
-        return (
-            <div >
-                <Grid container>
-              
+        if(jawaban !== null){
+            return (
+                <div >
+                    <Grid container>
 
-                    <EnhancedTableHead jawaban={jawaban} loading={loading}/>
 
-                </Grid>
+                        <EnhancedTableHead jawaban={jawaban} loading={loading} />
+
+                    </Grid>
+                </div>
+            ) 
+        }else{
+            <div>
+                <p>
+                    NO DATA
+                </p>
             </div>
-        )
+        }
+    
     }
 }
 DataPenjurusanSiswa.propTypes = {
