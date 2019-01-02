@@ -18,8 +18,11 @@ const data = [
     { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 },
     { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 },
 ];
-const SimpleBarChart =()=>({
+
+const SimpleBarChart = (jawaban)=>({
+   
     render() {
+        
         return (
             <BarChart width={800} height={400} data={data}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
