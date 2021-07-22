@@ -21,7 +21,7 @@
     "redux-devtools-extension": "^2.13.7",
     "redux-thunk": "^2.3.0",
     "typeface-roboto": "0.0.54",
-    "xlsx": "^0.14.1"
+    "xlsx": "^0.17.0"
   },
   "proxy": "http://localhost:5050",
   "scripts": {
